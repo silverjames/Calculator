@@ -13,6 +13,8 @@ class ViewController: UIViewController
 
  
     @IBOutlet weak var display: UILabel!
+    @IBOutlet weak var historyLabel: UILabel!
+    
     var userIsInTheMiddleOfTyping: Bool = false
     var operandStack = Array<Double>()
     var displayValue: Double{
@@ -29,6 +31,7 @@ class ViewController: UIViewController
         if userIsInTheMiddleOfTyping {
             enter()
         }
+        //historyLabel.text! = historyLabel.text! + "/\(operand)"
         
         switch operand {
         case "×": performOperations {$0 * $1}
@@ -38,19 +41,22 @@ class ViewController: UIViewController
         case "√": performOperation {sqrt ($0)}
         case "sin": performOperation {sin ($0)}
         case "cos": performOperation {cos($0)}
-        case "π": performOperation {sqrt ($0)}
         default: break
         }
         
     }
     
+    //why does it not allow me to use the same func name?
     func performOperations(operation: (Double, Double) -> Double){
         if operandStack.count >= 2 {
+            //historyLabel.text! = historyLabel.text! + "/\(operandStack.last)"
             displayValue = operation (operandStack.removeLast(), operandStack.removeLast())
             enter()
         }
     }
 
+  
+    
     func performOperation(operation: Double -> Double){
         if operandStack.count >= 1 {
             displayValue = operation (operandStack.removeLast())
@@ -76,9 +82,15 @@ class ViewController: UIViewController
                 display.text = digit
             }
         
-        
     }
     
+    
+    @IBAction func clearAll() {
+        operandStack.removeAll(keepCapacity: false)
+        //historyLabel.text = nil
+        displayValue = 0
+        
+    }
     
     @IBAction func enter() {
         userIsInTheMiddleOfTyping = false
