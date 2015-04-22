@@ -16,13 +16,19 @@ class ViewController: UIViewController
     @IBOutlet weak var historyLabel: UILabel!
     
     var userIsInTheMiddleOfTyping: Bool = false
-    var operandStack = Array<Double>()
-    var displayValue: Double{
+    var brain = CalculatorBrain()
+    var displayValue: Double?{
         get {
-            return NSNumberFormatter().numberFromString(display.text!)!.doubleValue
+            if let displayText = display.text{
+                return NSNumberFormatter().numberFromString(display.text!)!.doubleValue
+            }
+            else{
+                return nil
+            }
         }
         set {
-            display.text = "\(newValue)"
+            var tempValue = newValue ?? 0
+            display.text = "\(tempValue)"
         }
     }
     
@@ -32,45 +38,18 @@ class ViewController: UIViewController
             enter()
         }
         historyLabel.text! = historyLabel.text! + "/\(operand)"
-        
-        switch operand {
-        case "×": performOperations {$0 * $1}
-        case "÷": performOperations {$1 / $0}
-        case "+": performOperations {$0 + $1}
-        case "−": performOperations {$1 - $0}
-        case "√": performOperation {sqrt ($0)}
-        case "sin": performOperation {sin ($0)}
-        case "cos": performOperation {cos($0)}
-        default: break
-        }
-        
+        brain.pushOperation(operand)
+        let result = brain.evaluate()
+        displayValue = (result ?? nil)
     }
     
-    func performOperations(operation: (Double, Double) -> Double){
-        if operandStack.count >= 2 {
-            historyLabel.text! = historyLabel.text! + "/\(operandStack.last!)"
-            displayValue = operation (operandStack.removeLast(), operandStack.removeLast())
-            enter()
-        }
-    }
-    
-    func performOperation(operation: Double -> Double){
-        if operandStack.count >= 1 {
-            historyLabel.text! = historyLabel.text! + "/\(operandStack.last!)"
-            displayValue = operation (operandStack.removeLast())
-            enter()
-        }
-    }
-
     @IBAction func sendPi() {
         if userIsInTheMiddleOfTyping{ enter()}
-        operandStack.append(M_PI)
+        //operandStack.append(M_PI)
         
     }
     @IBAction func sendDigit(sender: UIButton){
-        
         let digit = sender.currentTitle!
-        
             if userIsInTheMiddleOfTyping {
                 if ((display.text?.rangeOfString(".") != nil) && digit != ".") || display.text?.rangeOfString(".") == nil{
                     display.text = display.text! + digit}
@@ -84,17 +63,19 @@ class ViewController: UIViewController
     
     
     @IBAction func clearAll() {
-        operandStack.removeAll(keepCapacity: false)
         historyLabel.text = ""
         displayValue = 0
+        brain.clear()
         
     }
     
     @IBAction func enter() {
         userIsInTheMiddleOfTyping = false
         historyLabel.text! = historyLabel.text! + "/\(display.text!)"
-        operandStack.append(displayValue)
-        println("operandStack: \(operandStack)")
+        brain.pushOperand(displayValue!)
+        let result = brain.evaluate()
+        displayValue = (result ?? 0)
+
     }
 }
 
