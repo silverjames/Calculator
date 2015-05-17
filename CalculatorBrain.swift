@@ -15,6 +15,8 @@ class CalculatorBrain {
         case Operand(Double)
         case UnaryOperation(String, Double->Double)
         case BinaryOperation(String, (Double, Double)->Double)
+        case Variable(String, Double)
+        case Constant(String, Double)
         
         var description: String {
             get {
@@ -25,6 +27,10 @@ class CalculatorBrain {
                         return symbol
                 case .BinaryOperation(let symbol, _):
                         return symbol
+                case .Variable(let symbol, _):
+                    return symbol
+                case .Constant(let symbol, _):
+                    return symbol
                 }
             }
         }
@@ -34,8 +40,10 @@ class CalculatorBrain {
     
     private var knownOps = [String: Op]()
     
+    
     //initializer
     init() {
+        
         func learnOps (op:Op){
             knownOps[op.description] = op
         }
@@ -49,10 +57,34 @@ class CalculatorBrain {
     }
     
     //API
-    func pushOperand(operand:Double){
-        operandStack.append(Op.Operand (operand))
+    var variableValues = [String: Double]()
+    
+    var description: String? {
+        get {
+            var (result, remainder) = describeStack(operandStack)
+            var resultString = result ?? ""
+            while !remainder.isEmpty {
+                var (result, remainder2) = describeStack(remainder)
+                if result != nil {
+                    resultString = resultString + result!
+                    remainder = remainder2
+                }
+            }
+            return resultString
+        }
+    }
+    
+    func pushOperand(operand:Double?){
+        if let tmpOperand = operand{
+            operandStack.append(Op.Operand (operand!))
+        }
 //        println("CalculatorBrain:pushOperand: pushed \(operand)")
 
+    }
+    
+    func pushOperand(operand: String) ->Double?{
+        variableValues[operand] = nil
+        return nil
     }
     
     func pushOperation(symbol: String){
@@ -70,8 +102,11 @@ class CalculatorBrain {
     
     func clear(){
         operandStack.removeAll(keepCapacity: false)
+        variableValues.removeAll(keepCapacity: false)
     }
     
+
+    //
     //internal stuff
     private func evaluate (ops:[Op]) ->(result: Double?, remainingOps:[Op]){
         if !ops.isEmpty{
@@ -96,8 +131,58 @@ class CalculatorBrain {
                         return (operation(operand1, operand2), operandEvaluation2.remainingOps)
                     }
                 }
+            default:
+                break
                 
             }
+            
+        }
+        return (nil, ops)
+    }
+    
+    //returns a textual expression of the stack content
+    private func describeStack(ops:[Op]) -> (result:String?, remainingOps:[Op]){
+        if !ops.isEmpty{
+            var remainingOps = ops
+            let op = remainingOps.removeLast()
+            switch op{
+            case .Operand( let operand):
+                let operandString = NSNumberFormatter().stringFromNumber(operand)
+                return (operandString, remainingOps)
+            
+            case .UnaryOperation (let operation, _):
+                let operandEvaluation = describeStack(remainingOps)
+                if let operand = operandEvaluation.result {
+                    return ("\(operation)(\(operand))", remainingOps)
+                }
+                else{
+                    return ("\(operation)(?)", remainingOps)
+                }
+                
+            case .BinaryOperation(let operation, _):
+                let operandEvaluation2 = describeStack(remainingOps)
+                if let operand2 = operandEvaluation2.result {
+                    let operandEvaluation1 = describeStack(operandEvaluation2.remainingOps)
+                    if let operand1 = operandEvaluation1.result {
+                        return ("\(operand1)\(operation)\(operand2)", operandEvaluation1.remainingOps)
+                    }
+                    else {
+                        return ("?\(operation)\(operand2)", operandEvaluation1.remainingOps)
+                    }
+                }
+                else {
+                    return ("?\(operation)?", operandEvaluation2.remainingOps)
+                    
+                }
+
+            case .Constant(let symbol, _):
+                return (symbol, remainingOps)
+                
+            case .Variable(let symbol, _):
+                return (symbol, remainingOps)
+                
+            }
+            
             
         }
         return (nil, ops)

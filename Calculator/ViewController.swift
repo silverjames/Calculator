@@ -11,7 +11,7 @@ import UIKit
 class ViewController: UIViewController
 {
 
- 
+ //declarations
     @IBOutlet weak var display: UILabel!
     @IBOutlet weak var historyLabel: UILabel!
     
@@ -19,10 +19,12 @@ class ViewController: UIViewController
     var brain = CalculatorBrain()
     var displayValue: Double?{
         get {
-            if let displayText = display.text{
-                return NSNumberFormatter().numberFromString(display.text!)!.doubleValue
+            var tmpDisplayText = display.text ?? ""
+            if let number = NSNumberFormatter().numberFromString(tmpDisplayText){
+                return number.doubleValue
             }
             else{
+                display.text = "invalid operation"
                 return nil
             }
         }
@@ -32,15 +34,41 @@ class ViewController: UIViewController
         }
     }
     
+//outlets and actions
+    @IBAction func getMemory() {
+        if let memory = brain.variableValues["M"]{
+            displayValue = memory
+        }
+    }
+    
+    @IBAction func setMemory() {
+        if userIsInTheMiddleOfTyping {
+            userIsInTheMiddleOfTyping = false
+        }
+        brain.pushOperand("M")
+        brain.variableValues["M"] = NSNumberFormatter().numberFromString(display.text!)?.doubleValue ?? nil
+    }
+    
+
     @IBAction func operate(sender: UIButton) {
         let operand = sender.currentTitle!
         if userIsInTheMiddleOfTyping {
-            enter()
+            stackOperand()
         }
-        historyLabel.text! = historyLabel.text! + "/\(operand)"
         brain.pushOperation(operand)
-        let result = brain.evaluate()
-        displayValue = (result ?? nil)
+        enter()
+    }
+    
+    @IBAction func backspace() {
+        if userIsInTheMiddleOfTyping && (display.text != nil){
+            let lengthOfDisplayText = count (display.text!)
+            if lengthOfDisplayText > 1{
+                display.text = dropLast (display.text!)
+            }
+            else {
+                display.text = " "
+            }
+        }
     }
     
     @IBAction func sendPi() {
@@ -58,24 +86,32 @@ class ViewController: UIViewController
                 userIsInTheMiddleOfTyping = true
                 display.text = digit
             }
-        
     }
     
     
     @IBAction func clearAll() {
-        historyLabel.text = ""
-        displayValue = 0
+        historyLabel.text = " "
+        displayValue = nil
         brain.clear()
         
     }
     
     @IBAction func enter() {
-        userIsInTheMiddleOfTyping = false
-        historyLabel.text! = historyLabel.text! + "/\(display.text!)"
-        brain.pushOperand(displayValue!)
-        let result = brain.evaluate()
-        displayValue = (result ?? 0)
-
+        if userIsInTheMiddleOfTyping{
+            stackOperand()
+        }
+        displayValue = brain.evaluate()
+        historyLabel.text! = brain.description ?? " "
+        
     }
+    
+//helper functions
+    func stackOperand(){
+        userIsInTheMiddleOfTyping = false
+        var tmpDisplayText = display.text ?? "  "
+        brain.pushOperand(displayValue)
+    }
+    
+
 }
 
