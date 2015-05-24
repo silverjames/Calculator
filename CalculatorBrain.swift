@@ -63,14 +63,17 @@ class CalculatorBrain {
         get {
             var (result, remainder) = describeStack(operandStack)
             var resultString = result ?? ""
+            println("result is \(resultString)")
             while !remainder.isEmpty {
                 var (result, remainder2) = describeStack(remainder)
                 if result != nil {
-                    resultString = resultString + result!
+                    resultString.splice("\(result!),", atIndex: resultString.startIndex)
                     remainder = remainder2
+                    println("result is \(resultString)")
+
                 }
             }
-            return resultString
+            return "\(resultString)="
         }
     }
     
@@ -153,10 +156,10 @@ class CalculatorBrain {
             case .UnaryOperation (let operation, _):
                 let operandEvaluation = describeStack(remainingOps)
                 if let operand = operandEvaluation.result {
-                    return ("\(operation)(\(operand))", remainingOps)
+                    return ("\(operation)(\(operand))", operandEvaluation.remainingOps)
                 }
                 else{
-                    return ("\(operation)(?)", remainingOps)
+                    return ("\(operation)(?)", operandEvaluation.remainingOps)
                 }
                 
             case .BinaryOperation(let operation, _):
