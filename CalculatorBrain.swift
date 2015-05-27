@@ -15,7 +15,7 @@ class CalculatorBrain {
         case Operand(Double)
         case UnaryOperation(String, Double->Double)
         case BinaryOperation(String, (Double, Double)->Double)
-        case Variable(String, Double)
+        case Variable(String)
         case Constant(String, Double)
         
         var description: String {
@@ -27,7 +27,7 @@ class CalculatorBrain {
                         return symbol
                 case .BinaryOperation(let symbol, _):
                         return symbol
-                case .Variable(let symbol, _):
+                case .Variable(let symbol):
                     return symbol
                 case .Constant(let symbol, _):
                     return symbol
@@ -39,6 +39,7 @@ class CalculatorBrain {
     private var operandStack = [Op]()
     
     private var knownOps = [String: Op]()
+    private var knownConstants = [String: Op]()
     
     
     //initializer
@@ -47,6 +48,9 @@ class CalculatorBrain {
         func learnOps (op:Op){
             knownOps[op.description] = op
         }
+        func learnConst (op:Op){
+            knownConstants[op.description] = op
+        }
         learnOps(.BinaryOperation("×", {$0 * $1}))
         learnOps(.BinaryOperation("÷", {$1 / $0}))
         learnOps(.BinaryOperation("+", {$0 + $1}))
@@ -54,9 +58,14 @@ class CalculatorBrain {
         learnOps(.UnaryOperation("√", {sqrt($0)}))
         learnOps(.UnaryOperation("sin", {sin($0)}))
         learnOps(.UnaryOperation("cos", {cos($0)}))
+        
+        learnConst(.Constant("π", 3.141592653589793))
+        
     }
     
+    //*****
     //API
+    //*****
     var variableValues = [String: Double]()
     
     var description: String? {
@@ -86,14 +95,19 @@ class CalculatorBrain {
     }
     
     func pushOperand(operand: String) ->Double?{
-        variableValues[operand] = nil
-        return nil
+        if let constant = knownConstants[operand]{
+            operandStack.append(constant)
+        }
+        else{
+            operandStack.append(Op.Variable(operand))
+        }
+        return evaluate()
     }
     
     func pushOperation(symbol: String){
         if let operation = knownOps[symbol]{
             operandStack.append(operation)
-//            println("CalculatorBrain:pushOperation: pushed \(symbol)")
+            println("CalculatorBrain:pushOperation: pushed \(symbol)")
         }
     }
     
@@ -106,6 +120,19 @@ class CalculatorBrain {
     func clear(){
         operandStack.removeAll(keepCapacity: false)
         variableValues.removeAll(keepCapacity: false)
+    }
+    
+    func getConstantValue (symbol: String) -> Double?{
+        if let op = knownConstants[symbol]{
+            switch op{
+            case .Constant(_, let returnValue):
+                return returnValue
+            
+            default:
+                break
+            }
+        }
+        return nil
     }
     
 
@@ -134,8 +161,15 @@ class CalculatorBrain {
                         return (operation(operand1, operand2), operandEvaluation2.remainingOps)
                     }
                 }
-            default:
-                break
+            case .Variable(let variable):
+                if let variableValue = variableValues[variable]{
+                    return (variableValue, remainingOps)
+                }
+                else{
+                    return (nil, remainingOps)
+                }
+            case .Constant(_, let constValue):
+                return (constValue, remainingOps)
                 
             }
             
@@ -181,7 +215,7 @@ class CalculatorBrain {
             case .Constant(let symbol, _):
                 return (symbol, remainingOps)
                 
-            case .Variable(let symbol, _):
+            case .Variable(let symbol):
                 return (symbol, remainingOps)
                 
             }

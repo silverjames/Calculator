@@ -19,25 +19,34 @@ class ViewController: UIViewController
     var brain = CalculatorBrain()
     var displayValue: Double?{
         get {
-            var tmpDisplayText = display.text ?? ""
-            if let number = NSNumberFormatter().numberFromString(tmpDisplayText){
+            if let number = NSNumberFormatter().numberFromString(display.text!){
                 return number.doubleValue
             }
             else{
-                display.text = "invalid operation"
                 return nil
             }
         }
         set {
-            var tempValue = newValue ?? 0
-            display.text = "\(tempValue)"
+            if let tempValue = newValue{
+                display.text = "\(tempValue)"
+            }
+            else {
+                display.text = " "
+            }
         }
     }
     
 //outlets and actions
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        displayValue = nil
+        historyLabel.text = ""
+    }
+    
     @IBAction func getMemory() {
-        if let memory = brain.variableValues["M"]{
+        if let memory = brain.pushOperand("M"){
             displayValue = memory
+            historyLabel.text = brain.description ?? " "
         }
     }
     
@@ -45,8 +54,9 @@ class ViewController: UIViewController
         if userIsInTheMiddleOfTyping {
             userIsInTheMiddleOfTyping = false
         }
-        brain.pushOperand("M")
         brain.variableValues["M"] = NSNumberFormatter().numberFromString(display.text!)?.doubleValue ?? nil
+        displayValue = brain.evaluate()
+        historyLabel.text = brain.description ?? " "
     }
     
 
@@ -72,10 +82,11 @@ class ViewController: UIViewController
     }
     
     @IBAction func sendPi() {
-        if userIsInTheMiddleOfTyping{ enter()}
-        //operandStack.append(M_PI)
-        
+//        stackOperand()
+        brain.pushOperand("π")
+        displayValue = brain.getConstantValue("π")
     }
+    
     @IBAction func sendDigit(sender: UIButton){
         let digit = sender.currentTitle!
             if userIsInTheMiddleOfTyping {
@@ -100,16 +111,19 @@ class ViewController: UIViewController
         if userIsInTheMiddleOfTyping{
             stackOperand()
         }
-        displayValue = brain.evaluate()
-        historyLabel.text! = brain.description ?? " "
-        
+        evaluateAndDisplayResult()
     }
     
 //helper functions
-    func stackOperand(){
+    private func stackOperand(){
         userIsInTheMiddleOfTyping = false
-        var tmpDisplayText = display.text ?? "  "
         brain.pushOperand(displayValue)
+    }
+    
+    private func evaluateAndDisplayResult() {
+        displayValue = brain.evaluate()
+        historyLabel.text = brain.description ?? " "
+        
     }
     
 
