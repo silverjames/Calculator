@@ -55,6 +55,7 @@ class ViewController: UIViewController
             userIsInTheMiddleOfTyping = false
         }
         brain.variableValues["M"] = NSNumberFormatter().numberFromString(display.text!)?.doubleValue ?? nil
+        
         displayValue = brain.evaluate()
         historyLabel.text = brain.description ?? " "
     }
