@@ -34,6 +34,29 @@ class CalculatorBrain {
                 }
             }
         }
+
+        var operatorPrecedence: Int {
+            get {
+                switch self{
+                    case .BinaryOperation(let operation, _):
+                        switch operation{
+                            case "+", "−":
+                                let operatorPrecedence = 3
+                                return operatorPrecedence
+                            case "×", "÷":
+                                let operatorPrecedence = 5
+                                return operatorPrecedence
+                        default:
+                            let operatorPrecedence = 5
+                            return operatorPrecedence
+                        }//end switch operation
+                    
+                default:
+                    let operatorPrecedence = 8
+                    return operatorPrecedence
+               }//end switch self
+            }//end get
+        }//end var
     }
     
     private var operandStack = [Op]()
@@ -197,18 +220,18 @@ class CalculatorBrain {
                 }
                 
             case .BinaryOperation(let operation, _):
-                let operandEvaluation2 = describeStack(remainingOps)
-                if let operand2 = operandEvaluation2.result {
-                    let operandEvaluation1 = describeStack(operandEvaluation2.remainingOps)
-                    if let operand1 = operandEvaluation1.result {
-                        return ("\(operand1)\(operation)\(operand2)", operandEvaluation1.remainingOps)
+                let operandEvaluation1 = describeStack(remainingOps)
+                if let operand1 = operandEvaluation1.result {
+                    let operandEvaluation2 = describeStack(operandEvaluation1.remainingOps)
+                    if let operand2 = operandEvaluation2.result {
+                        return ("\(operand2)\(operation)\(operand1)", operandEvaluation2.remainingOps)
                     }
                     else {
-                        return ("?\(operation)\(operand2)", operandEvaluation1.remainingOps)
+                        return ("?\(operation)\(operand1)", operandEvaluation2.remainingOps)
                     }
                 }
                 else {
-                    return ("?\(operation)?", operandEvaluation2.remainingOps)
+                    return ("?\(operation)?", operandEvaluation1.remainingOps)
                     
                 }
 

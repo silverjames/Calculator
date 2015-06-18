@@ -41,12 +41,34 @@ class ViewController: UIViewController
         super.viewDidLoad()
         displayValue = nil
         historyLabel.text = ""
+        for button in view.subviews{
+            if button is UIButton {
+                    //button.backgroundColor = UIColor.clearColor()
+                button.layer.cornerRadius = 5
+                button.layer.borderWidth = 0.1
+                button.layer.borderColor = UIColor.grayColor().CGColor
+//                button.layer.backgroundColor = UIColor.grayColor().CGColor
+            }
+        }
+        
+        for label in view.subviews {
+            if label is UILabel {
+                label.layer.cornerRadius = 5
+                label.layer.borderWidth = 0.2
+                label.layer.borderColor = UIColor.blueColor().CGColor
+            }
+        }
+        
+        
     }
     
     @IBAction func getMemory() {
         if let memory = brain.pushOperand("M"){
             displayValue = memory
             historyLabel.text = brain.description ?? " "
+        }
+        else{
+            displayValue = nil
         }
     }
     
@@ -77,7 +99,7 @@ class ViewController: UIViewController
                 display.text = dropLast (display.text!)
             }
             else {
-                display.text = " "
+                displayValue = nil
             }
         }
     }
