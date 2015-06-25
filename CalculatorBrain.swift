@@ -11,6 +11,13 @@ import Foundation
 class CalculatorBrain {
     
     //declarations
+
+    struct Precedences {
+        let high = 5
+        let medium = 3
+        let low = 1
+    }
+
     private enum Op:Printable {
         case Operand(Double)
         case UnaryOperation(String, Double->Double)
@@ -37,32 +44,32 @@ class CalculatorBrain {
 
         var operatorPrecedence: Int {
             get {
+                let precedence = Precedences()
                 switch self{
                     case .BinaryOperation(let operation, _):
                         switch operation{
                             case "+", "−":
-                                let operatorPrecedence = 3
-                                return operatorPrecedence
+                                return precedence.low
                             case "×", "÷":
-                                let operatorPrecedence = 5
-                                return operatorPrecedence
-                        default:
-                            let operatorPrecedence = 5
-                            return operatorPrecedence
+                                return precedence.medium
+                            default:
+                                return precedence.medium
                         }//end switch operation
                     
-                default:
-                    let operatorPrecedence = 8
-                    return operatorPrecedence
+                    default:
+                        return precedence.high
                }//end switch self
             }//end get
         }//end var
     }
     
-    private var operandStack = [Op]()
     
+    private var operandStack = [Op]()
     private var knownOps = [String: Op]()
     private var knownConstants = [String: Op]()
+    private var valueFormatter = NSNumberFormatter()
+    private var previousPrecedence:Int?
+    private var currentPrecedence:Int?
     
     
     //initializer
@@ -83,6 +90,10 @@ class CalculatorBrain {
         learnOps(.UnaryOperation("cos", {cos($0)}))
         
         learnConst(.Constant("π", 3.141592653589793))
+
+        valueFormatter.numberStyle = .DecimalStyle
+        valueFormatter.generatesDecimalNumbers = true
+        valueFormatter.locale = NSLocale(localeIdentifier: "de_DE")
         
     }
     
@@ -93,16 +104,14 @@ class CalculatorBrain {
     
     var description: String? {
         get {
-            var (result, remainder) = describeStack(operandStack)
+            var (result, remainder, _) = describeStack(operandStack)
             var resultString = result ?? ""
             println("result is \(resultString)")
             while !remainder.isEmpty {
-                var (result, remainder2) = describeStack(remainder)
+                var (result, remainder2, _) = describeStack(remainder)
                 if result != nil {
                     resultString.splice("\(result!),", atIndex: resultString.startIndex)
                     remainder = remainder2
-                    println("result is \(resultString)")
-
                 }
             }
             return "\(resultString)="
@@ -167,16 +176,13 @@ class CalculatorBrain {
             let op = remainingOps.removeLast()
             switch op {
             case .Operand(let operand):
-//                    println("CalculatorBrain:evaluate: pulled operand \(operand)")
                     return (operand, remainingOps)
             case .UnaryOperation(_, let operation):
-//                println("CalculatorBrain:evaluate: pulled unary ops \(operation)")
                 let operandEvaluation = evaluate(remainingOps)
                 if operandEvaluation.result != nil{
                     return (operation(operandEvaluation.result!), operandEvaluation.remainingOps)
                 }
             case .BinaryOperation(_, let operation):
-//                println("CalculatorBrain:evaluate: pulled binary ops \(operation)")
                 let operandEvaluation1 = evaluate(remainingOps)
                 if let operand1 = operandEvaluation1.result{
                     let operandEvaluation2 = evaluate(operandEvaluation1.remainingOps)
@@ -201,51 +207,70 @@ class CalculatorBrain {
     }
     
     //returns a textual expression of the stack content
-    private func describeStack(ops:[Op]) -> (result:String?, remainingOps:[Op]){
+    private func describeStack(ops:[Op]) -> (result:String?, remainingOps:[Op], precedence:Int?){
+
+        let precedences = Precedences()
+        
         if !ops.isEmpty{
             var remainingOps = ops
             let op = remainingOps.removeLast()
+            
             switch op{
             case .Operand( let operand):
-                let operandString = NSNumberFormatter().stringFromNumber(operand)
-                return (operandString, remainingOps)
+//                var operandString = valueFormatter.stringFromNumber(operand)
+                return (operand.description, remainingOps, nil)
             
             case .UnaryOperation (let operation, _):
                 let operandEvaluation = describeStack(remainingOps)
                 if let operand = operandEvaluation.result {
-                    return ("\(operation)(\(operand))", operandEvaluation.remainingOps)
+                    return ("\(operation)(\(operand))", operandEvaluation.remainingOps, precedences.high)
                 }
                 else{
-                    return ("\(operation)(?)", operandEvaluation.remainingOps)
+                    return ("\(operation)(?)", operandEvaluation.remainingOps, nil)
                 }
                 
             case .BinaryOperation(let operation, _):
+                previousPrecedence = currentPrecedence
+                currentPrecedence = op.operatorPrecedence
+                println("begin case:previous precedence: \(previousPrecedence), current precedence: \(currentPrecedence)")
+
                 let operandEvaluation1 = describeStack(remainingOps)
+                println("operand 1:previous precedence: \(previousPrecedence), current precedence: \(currentPrecedence)")
                 if let operand1 = operandEvaluation1.result {
                     let operandEvaluation2 = describeStack(operandEvaluation1.remainingOps)
+                    
                     if let operand2 = operandEvaluation2.result {
-                        return ("\(operand2)\(operation)\(operand1)", operandEvaluation2.remainingOps)
+                        println("operand 2:previous precedence: \(previousPrecedence), current precedence: \(currentPrecedence)")
+ 
+                        if currentPrecedence < previousPrecedence {
+                            currentPrecedence = nil
+                            previousPrecedence = nil
+                            return ("(\(operand2)\(operation)\(operand1))", operandEvaluation2.remainingOps, operandEvaluation2.precedence)
+                        }
+                        else {
+                              return ("\(operand2)\(operation)\(operand1)", operandEvaluation2.remainingOps, operandEvaluation2.precedence)
+                        }
                     }
                     else {
-                        return ("?\(operation)\(operand1)", operandEvaluation2.remainingOps)
+                        return ("?\(operation)\(operand1)", operandEvaluation2.remainingOps, operandEvaluation2.precedence)
                     }
                 }
                 else {
-                    return ("?\(operation)?", operandEvaluation1.remainingOps)
+                    return ("?\(operation)?", operandEvaluation1.remainingOps, operandEvaluation1.precedence)
                     
                 }
 
             case .Constant(let symbol, _):
-                return (symbol, remainingOps)
+                return (symbol, remainingOps, precedences.high)
                 
             case .Variable(let symbol):
-                return (symbol, remainingOps)
+                return (symbol, remainingOps, precedences.high)
                 
             }
             
             
         }
-        return (nil, ops)
+        return (nil, ops, nil)
     }
     
 

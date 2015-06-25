@@ -113,13 +113,15 @@ class ViewController: UIViewController
     @IBAction func sendDigit(sender: UIButton){
         let digit = sender.currentTitle!
             if userIsInTheMiddleOfTyping {
-                if ((display.text?.rangeOfString(".") != nil) && digit != ".") || display.text?.rangeOfString(".") == nil{
-                    display.text = display.text! + digit}
+                if ((display.text?.rangeOfString(".") != nil) && digit != ".") || display.text?.rangeOfString(".") == nil {
+                    display.text = display.text! + digit
+                }
             }
             else {
                 userIsInTheMiddleOfTyping = true
                 display.text = digit
             }
+        println("display text: \(display.text)")
     }
     
     

@@ -378,7 +378,7 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nOC-U7-ewx">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="clip" translatesAutoresizingMaskIntoConstraints="NO" id="nOC-U7-ewx">
                                 <rect key="frame" x="490.5" y="312.5" width="85.5" height="112.5"/>
                                 <constraints>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="44" id="ZKl-Is-3WO" userLabel="The"/>
@@ -396,7 +396,7 @@
                                     <action selector="setMemory" destination="BYZ-38-t0r" eventType="touchUpInside" id="UM4-wq-WAX"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HX1-Qc-r91">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="clip" translatesAutoresizingMaskIntoConstraints="NO" id="HX1-Qc-r91">
                                 <rect key="frame" x="24" y="70.5" width="85" height="113"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="86" id="OPX-dR-wCx"/>
