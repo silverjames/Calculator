@@ -17,9 +17,11 @@ class ViewController: UIViewController
     
     var userIsInTheMiddleOfTyping: Bool = false
     var brain = CalculatorBrain()
+    var valueFormatter = NSNumberFormatter()
+    
     var displayValue: Double?{
         get {
-            if let number = NSNumberFormatter().numberFromString(display.text!){
+            if let number = valueFormatter.numberFromString(display.text!){
                 return number.doubleValue
             }
             else{
@@ -28,7 +30,7 @@ class ViewController: UIViewController
         }
         set {
             if let tempValue = newValue{
-                display.text = "\(tempValue)"
+                display.text = "\(NSNumberFormatter.localizedStringFromNumber(tempValue, numberStyle: .DecimalStyle))"
             }
             else {
                 display.text = " "
@@ -40,7 +42,12 @@ class ViewController: UIViewController
     override func viewDidLoad() {
         super.viewDidLoad()
         displayValue = nil
-        historyLabel.text = ""
+        historyLabel.text = " "
+
+        valueFormatter.locale = NSLocale.currentLocale()
+        valueFormatter.numberStyle = .DecimalStyle
+        valueFormatter.generatesDecimalNumbers = true
+        
         for button in view.subviews{
             if button is UIButton {
                     //button.backgroundColor = UIColor.clearColor()
@@ -76,7 +83,7 @@ class ViewController: UIViewController
         if userIsInTheMiddleOfTyping {
             userIsInTheMiddleOfTyping = false
         }
-        brain.variableValues["M"] = NSNumberFormatter().numberFromString(display.text!)?.doubleValue ?? nil
+        brain.variableValues["M"] = valueFormatter.numberFromString(display.text!)?.doubleValue ?? nil
         
         displayValue = brain.evaluate()
         historyLabel.text = brain.description ?? " "
@@ -93,7 +100,8 @@ class ViewController: UIViewController
     }
     
     @IBAction func backspace() {
-        if userIsInTheMiddleOfTyping && (display.text != nil){
+        if userIsInTheMiddleOfTyping && (display.text != nil){//backspace
+
             let lengthOfDisplayText = count (display.text!)
             if lengthOfDisplayText > 1{
                 display.text = dropLast (display.text!)
@@ -101,6 +109,9 @@ class ViewController: UIViewController
             else {
                 displayValue = nil
             }
+        } else {// undo
+            brain.undo()
+            enter()
         }
     }
     

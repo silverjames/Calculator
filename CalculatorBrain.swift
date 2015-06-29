@@ -42,7 +42,7 @@ class CalculatorBrain {
             }
         }
 
-        var operatorPrecedence: Int {
+        var precedence: Int {
             get {
                 let precedence = Precedences()
                 switch self{
@@ -154,6 +154,10 @@ class CalculatorBrain {
         variableValues.removeAll(keepCapacity: false)
     }
     
+    func undo(){
+        operandStack.removeLast()
+    }
+    
     func getConstantValue (symbol: String) -> Double?{
         if let op = knownConstants[symbol]{
             switch op{
@@ -217,21 +221,21 @@ class CalculatorBrain {
             
             switch op{
             case .Operand( let operand):
-//                var operandString = valueFormatter.stringFromNumber(operand)
-                return (operand.description, remainingOps, nil)
+                var operandString = valueFormatter.stringFromNumber(operand)
+                return (operandString, remainingOps, op.precedence)
             
             case .UnaryOperation (let operation, _):
                 let operandEvaluation = describeStack(remainingOps)
                 if let operand = operandEvaluation.result {
-                    return ("\(operation)(\(operand))", operandEvaluation.remainingOps, precedences.high)
+                    return ("\(operation)(\(operand))", operandEvaluation.remainingOps, op.precedence)
                 }
                 else{
-                    return ("\(operation)(?)", operandEvaluation.remainingOps, nil)
+                    return ("\(operation)(?)", operandEvaluation.remainingOps, op.precedence)
                 }
                 
             case .BinaryOperation(let operation, _):
                 previousPrecedence = currentPrecedence
-                currentPrecedence = op.operatorPrecedence
+                currentPrecedence = op.precedence
                 println("begin case:previous precedence: \(previousPrecedence), current precedence: \(currentPrecedence)")
 
                 let operandEvaluation1 = describeStack(remainingOps)
@@ -261,16 +265,16 @@ class CalculatorBrain {
                 }
 
             case .Constant(let symbol, _):
-                return (symbol, remainingOps, precedences.high)
+                return (symbol, remainingOps, op.precedence)
                 
             case .Variable(let symbol):
-                return (symbol, remainingOps, precedences.high)
+                return (symbol, remainingOps, op.precedence)
                 
             }
             
             
         }
-        return (nil, ops, nil)
+        return (nil, ops, Int.max)
     }
     
 
