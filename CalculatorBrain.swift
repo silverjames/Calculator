@@ -17,6 +17,11 @@ class CalculatorBrain {
         let medium = 3
         let low = 1
     }
+    struct Messages {
+        let argMissing = "error: missing argument"
+        let negOperand = "error: illegal negative operand"
+        let operandZero = "error: division by zero"
+    }
 
     private enum Op:Printable {
         case Operand(Double)
@@ -61,6 +66,45 @@ class CalculatorBrain {
                }//end switch self
             }//end get
         }//end var
+        
+        var errorCheck: ((Double) -> String?)? {
+            
+            get {
+                let errorMessages = Messages()
+                func checkForNegativeValue (arg: Double) -> String? {
+                    if arg < 0 {return errorMessages.negOperand}
+                    return nil
+                }
+                
+                func checkForZeroValue (arg: Double) -> String? {
+                    if arg == 0 {return errorMessages.operandZero}
+                    return nil
+                }
+
+                switch self{
+                case .UnaryOperation(let operation, _):
+                    switch operation{
+                        case "√":
+                            var checkFunction: (Double) -> String? = checkForNegativeValue
+                            return checkFunction
+                        default:
+                            return nil
+                    }
+                    
+                case .BinaryOperation(let operation, _):
+                    switch operation {
+                        case "÷":
+                            var checkFunction: (Double) -> String? = checkForZeroValue
+                            return checkFunction
+                        default:
+                            return nil
+                    }
+                default:
+                    return nil
+                    
+                }//switch
+            }//end get
+        }//end var
     }
     
     
@@ -91,9 +135,10 @@ class CalculatorBrain {
         
         learnConst(.Constant("π", 3.141592653589793))
 
+        valueFormatter.locale = NSLocale.currentLocale()
         valueFormatter.numberStyle = .DecimalStyle
         valueFormatter.generatesDecimalNumbers = true
-        valueFormatter.locale = NSLocale(localeIdentifier: "de_DE")
+        
         
     }
     
@@ -101,6 +146,7 @@ class CalculatorBrain {
     //API
     //*****
     var variableValues = [String: Double]()
+    var errorMessages = Messages()
     
     var description: String? {
         get {
@@ -126,7 +172,7 @@ class CalculatorBrain {
 
     }
     
-    func pushOperand(operand: String) ->Double?{
+    func pushOperand(operand: String) -> (Double?, String?){
         if let constant = knownConstants[operand]{
             operandStack.append(constant)
         }
@@ -143,10 +189,11 @@ class CalculatorBrain {
         }
     }
     
-    func evaluate() -> Double?{
-        let (result, remainder) = evaluate(operandStack)
-        println("\(operandStack) = \(result) with \(remainder) left over")
-        return result
+    func evaluate() -> (Double?, String?) {
+        let (result, remainder, errMsg) = evaluate(operandStack)
+        let msg = errMsg ?? ""
+        println("\(operandStack) = \(result) with \(remainder) and message: \(msg) left over")
+        return (result, errMsg)
     }
     
     func clear(){
@@ -174,40 +221,60 @@ class CalculatorBrain {
 
     //
     //internal stuff
-    private func evaluate (ops:[Op]) ->(result: Double?, remainingOps:[Op]){
+    private func evaluate (ops:[Op]) ->(result: Double?, remainingOps:[Op], evalMessage: String?){
         if !ops.isEmpty{
             var remainingOps = ops
             let op = remainingOps.removeLast()
             switch op {
             case .Operand(let operand):
-                    return (operand, remainingOps)
+                    return (operand, remainingOps, nil)
             case .UnaryOperation(_, let operation):
                 let operandEvaluation = evaluate(remainingOps)
                 if operandEvaluation.result != nil{
-                    return (operation(operandEvaluation.result!), operandEvaluation.remainingOps)
+                    if let msg = op.errorCheck?(operandEvaluation.result!){
+                        return (operation(operandEvaluation.result!), operandEvaluation.remainingOps, msg)
+                    }
+                    else {
+                        return (operation(operandEvaluation.result!), operandEvaluation.remainingOps, nil)
+                    }
+                }
+                else {
+                    return (nil, remainingOps, errorMessages.argMissing)
                 }
             case .BinaryOperation(_, let operation):
                 let operandEvaluation1 = evaluate(remainingOps)
                 if let operand1 = operandEvaluation1.result{
-                    let operandEvaluation2 = evaluate(operandEvaluation1.remainingOps)
-                    if let operand2 = operandEvaluation2.result {
-                        return (operation(operand1, operand2), operandEvaluation2.remainingOps)
+                    if let msg = op.errorCheck?(operandEvaluation1.result!){
+                        return (nil, operandEvaluation1.remainingOps, msg)
+                    }
+                    else {
+                        let operandEvaluation2 = evaluate(operandEvaluation1.remainingOps)
+                        if let operand2 = operandEvaluation2.result {
+                            return (operation(operand1, operand2), operandEvaluation2.remainingOps, nil)
+                        }
+                        else {
+                            return (nil, remainingOps, errorMessages.argMissing)
+                        }
                     }
                 }
+                else {
+                    return (nil, remainingOps, errorMessages.argMissing)
+                }
+
             case .Variable(let variable):
                 if let variableValue = variableValues[variable]{
-                    return (variableValue, remainingOps)
+                    return (variableValue, remainingOps, nil)
                 }
                 else{
-                    return (nil, remainingOps)
+                    return (nil, remainingOps, nil)
                 }
             case .Constant(_, let constValue):
-                return (constValue, remainingOps)
+                return (constValue, remainingOps, nil)
                 
             }
             
         }
-        return (nil, ops)
+        return (nil, ops, nil)
     }
     
     //returns a textual expression of the stack content

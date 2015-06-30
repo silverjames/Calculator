@@ -70,12 +70,14 @@ class ViewController: UIViewController
     }
     
     @IBAction func getMemory() {
-        if let memory = brain.pushOperand("M"){
+        let (memory, msg) = brain.pushOperand("M")
+
+        if memory != nil {
             displayValue = memory
             historyLabel.text = brain.description ?? " "
         }
         else{
-            displayValue = nil
+            display.text = msg
         }
     }
     
@@ -85,7 +87,7 @@ class ViewController: UIViewController
         }
         brain.variableValues["M"] = valueFormatter.numberFromString(display.text!)?.doubleValue ?? nil
         
-        displayValue = brain.evaluate()
+        let (displayValue, msg) = brain.evaluate()
         historyLabel.text = brain.description ?? " "
     }
     
@@ -157,7 +159,13 @@ class ViewController: UIViewController
     }
     
     private func evaluateAndDisplayResult() {
-        displayValue = brain.evaluate()
+        let (tmpValue, errMsg) = brain.evaluate()
+        if errMsg != nil {
+            display.text = errMsg
+        }
+        else {
+            displayValue = tmpValue
+        }
         historyLabel.text = brain.description ?? " "
         
     }
