@@ -13,14 +13,14 @@ class GraphViewModel: AnyObject, graphViewdataSource  {
   
     var lowerBound: Double = 0.0
     var upperBound: Double = 0.0
-    let divider = 0.1
+    var increment: Double = 0.1
     
     func getGraphData() -> [Double: Double] {
         var data = [Double: Double]()
         var stepper = lowerBound
         while stepper <= upperBound{
             data[stepper] = sin(stepper)
-            stepper = stepper + divider
+            stepper = stepper + increment
         }
         return data
         
