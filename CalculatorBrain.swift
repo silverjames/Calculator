@@ -147,6 +147,14 @@ class CalculatorBrain {
     //*****
     var variableValues = [String: Double]()
     var errorMessages = Messages()
+    var program:AnyObject{
+        get {
+            return operandStack.map {$0.description}
+        }
+        set {
+            
+        }
+    }
     
     var description: String? {
         get {
