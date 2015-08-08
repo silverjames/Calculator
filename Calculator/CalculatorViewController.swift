@@ -180,10 +180,8 @@ class CalculatorViewController: UIViewController
             case Constants().graphViewSegue :
                 if let vc = segue.destinationViewController as? GraphViewController{
                     vc.programToGraph = brain.getCurrentProgram() ?? ""
-                    if let defaults = defaults.valueForKey(constants.userDefaultsKey) as? [String] {
-                        vc.programToLoad = defaults
+                    vc.programToLoad = brain.program as! [String]
                     }
-                }
             default:
                 break
             }
