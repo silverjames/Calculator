@@ -57,14 +57,13 @@
                                     <action selector="operate:" destination="BYZ-38-t0r" eventType="touchUpInside" id="2BS-Oh-vPw"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="t60-F6-bi6">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="t60-F6-bi6">
                                 <rect key="frame" x="448" y="489" width="136" height="65"/>
                                 <color key="backgroundColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="44" id="Spx-jB-eMd" userLabel="The"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="26"/>
-                                <state key="normal" title="G">
+                                <state key="normal" image="sinus">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <variation key="default">
@@ -1052,13 +1051,6 @@
                                 <exclude reference="e9X-7n-1u0"/>
                                 <exclude reference="YuL-za-D5m"/>
                                 <exclude reference="iet-vr-M5L"/>
-                                <exclude reference="1Re-8a-Qjc"/>
-                                <exclude reference="3cj-dI-Kfc"/>
-                                <exclude reference="XIr-JV-x46"/>
-                                <exclude reference="cpS-Wh-gQU"/>
-                                <exclude reference="dra-dp-Kej"/>
-                                <exclude reference="dzL-J0-znq"/>
-                                <exclude reference="nd7-ct-WZf"/>
                                 <exclude reference="1lt-G7-ars"/>
                                 <exclude reference="7At-Ly-PsE"/>
                                 <exclude reference="8Jq-u3-y8R"/>
@@ -1125,6 +1117,13 @@
                                 <exclude reference="Mfn-n4-iI8"/>
                                 <exclude reference="haP-yq-RAq"/>
                                 <exclude reference="quv-Lw-3LH"/>
+                                <exclude reference="1Re-8a-Qjc"/>
+                                <exclude reference="3cj-dI-Kfc"/>
+                                <exclude reference="XIr-JV-x46"/>
+                                <exclude reference="cpS-Wh-gQU"/>
+                                <exclude reference="dra-dp-Kej"/>
+                                <exclude reference="dzL-J0-znq"/>
+                                <exclude reference="nd7-ct-WZf"/>
                                 <exclude reference="3dW-HL-eBQ"/>
                                 <exclude reference="Ams-kV-IYH"/>
                                 <exclude reference="Bcc-eQ-jUS"/>
@@ -1420,8 +1419,13 @@
                             <mask key="subviews">
                                 <exclude reference="1iw-eD-HNo"/>
                                 <exclude reference="VnR-kM-efz"/>
+                                <exclude reference="t60-F6-bi6"/>
+                                <exclude reference="6ya-mA-Ols"/>
                                 <exclude reference="LB4-pM-JnG"/>
                                 <exclude reference="apm-bi-duf"/>
+                                <exclude reference="nOC-U7-ewx"/>
+                                <include reference="Bi5-rZ-sBE"/>
+                                <exclude reference="Kfr-9r-sa6"/>
                             </mask>
                             <mask key="constraints">
                                 <include reference="dzL-J0-znq"/>
@@ -1440,7 +1444,6 @@
                         </variation>
                         <variation key="widthClass=compact">
                             <mask key="constraints">
-                                <exclude reference="XIr-JV-x46"/>
                                 <exclude reference="2DZ-4f-USP"/>
                                 <exclude reference="4fv-7Z-owm"/>
                                 <exclude reference="7At-Ly-PsE"/>
@@ -1464,6 +1467,7 @@
                                 <exclude reference="ETV-gU-cvL"/>
                                 <exclude reference="UDd-wI-Qfm"/>
                                 <exclude reference="v3Y-Kt-Ts2"/>
+                                <exclude reference="XIr-JV-x46"/>
                                 <exclude reference="Bcc-eQ-jUS"/>
                                 <include reference="CNI-NY-CGp"/>
                                 <exclude reference="GAI-6c-kmR"/>
@@ -1600,7 +1604,7 @@
                         <viewControllerLayoutGuide type="top" id="X3g-MV-M8m"/>
                         <viewControllerLayoutGuide type="bottom" id="eNh-2a-CV6"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="sjZ-SF-f0t">
+                    <view key="view" contentMode="redraw" id="sjZ-SF-f0t">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -1666,6 +1670,9 @@
             <point key="canvasLocation" x="-2573" y="-1011"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="sinus" width="65" height="40"/>
+    </resources>
     <inferredMetricsTieBreakers>
         <segue reference="DGY-Yq-duC"/>
     </inferredMetricsTieBreakers>

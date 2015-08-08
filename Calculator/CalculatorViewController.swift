@@ -18,15 +18,21 @@ class CalculatorViewController: UIViewController
     var userIsInTheMiddleOfTyping: Bool = false
     var brain = CalculatorBrain()
     var valueFormatter = NSNumberFormatter()
+    var defaults = NSUserDefaults.standardUserDefaults()
+    struct Constants {
+        let graphViewSegue = "Show Graph"
+        let userDefaultsKey = "Calculator"
+        let memoryButton = "M"
+    }
+    var constants = Constants()
+
     
     var displayValue: Double?{
         get {
-            if let number = valueFormatter.numberFromString(display.text!){
-                return number.doubleValue
+            if let displayTxt = display.text {
+                return valueFormatter.numberFromString(display.text!)?.doubleValue
             }
-            else{
                 return nil
-            }
         }
         set {
             if let tempValue = newValue{
@@ -39,6 +45,7 @@ class CalculatorViewController: UIViewController
     }
     
 //outlets and actions
+//lifecycle functions
     override func viewDidLoad() {
         super.viewDidLoad()
         displayValue = nil
@@ -66,15 +73,27 @@ class CalculatorViewController: UIViewController
             }
         }
         
-        
+        if let defaultsData: AnyObject = defaults.objectForKey(constants.userDefaultsKey){
+            println("CVC: found defaults data")
+            brain.program = defaultsData
+ 
+        }
     }
     
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(false)
+        defaults.setObject(brain.program, forKey: constants.userDefaultsKey)
+    }
+    
+//outlets
     @IBAction func getMemory() {
-        let (memory, msg) = brain.pushOperand("M")
+        let (memory, msg) = brain.pushOperand(constants.memoryButton)
 
         if memory != nil {
             displayValue = memory
-            historyLabel.text = brain.description ?? " "
+            if let desc = brain.description{
+                historyLabel.text = desc + "="
+            }
         }
         else{
             display.text = msg
@@ -82,13 +101,14 @@ class CalculatorViewController: UIViewController
     }
     
     @IBAction func setMemory() {
-        if userIsInTheMiddleOfTyping {
-            userIsInTheMiddleOfTyping = false
-        }
-        brain.variableValues["M"] = valueFormatter.numberFromString(display.text!)?.doubleValue ?? nil
+        if userIsInTheMiddleOfTyping {userIsInTheMiddleOfTyping = false}
         
-        let (displayValue, msg) = brain.evaluate()
-        historyLabel.text = brain.description ?? " "
+        if display.text != nil{
+            if let value = valueFormatter.numberFromString(display.text!)?.doubleValue {
+                brain.variableValues[constants.memoryButton] = value
+                println("CVC: set mem to \(brain.variableValues[constants.memoryButton])")
+            }
+        }
     }
     
 
@@ -118,7 +138,7 @@ class CalculatorViewController: UIViewController
     }
     
     @IBAction func sendPi() {
-//        stackOperand()
+//        stackOperand(
         brain.pushOperand("π")
         displayValue = brain.getConstantValue("π")
     }
@@ -142,7 +162,7 @@ class CalculatorViewController: UIViewController
         historyLabel.text = " "
         displayValue = nil
         brain.clear()
-        
+        defaults.removeObjectForKey(constants.userDefaultsKey)
     }
     
     @IBAction func enter() {
@@ -150,6 +170,24 @@ class CalculatorViewController: UIViewController
             stackOperand()
         }
         evaluateAndDisplayResult()
+
+    }
+    
+// preparing for segues
+    override func prepareForSegue(segue: UIStoryboardSegue , sender: AnyObject?) {
+        if let identifier = segue.identifier{
+            switch identifier{
+            case Constants().graphViewSegue :
+                if let vc = segue.destinationViewController as? GraphViewController{
+                    vc.programToGraph = brain.getCurrentProgram() ?? ""
+                    if let defaults = defaults.valueForKey(constants.userDefaultsKey) as? [String] {
+                        vc.programToLoad = defaults
+                    }
+                }
+            default:
+                break
+            }
+        }
     }
     
 //helper functions

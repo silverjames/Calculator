@@ -10,7 +10,9 @@ import Foundation
 
 class CalculatorBrain {
     
-    //declarations
+    //*******************
+    //structure and enums
+    //*******************
 
     struct Precedences {
         let high = 5
@@ -106,8 +108,16 @@ class CalculatorBrain {
             }//end get
         }//end var
     }
+
+    //*******************
+    //properties
+    //*******************
     
-    
+    var variableValues = [String: Double]()
+
+    private let errorMessages = Messages()
+    private let precedences = Precedences()
+    private let stringSeparator:String = ";"
     private var operandStack = [Op]()
     private var knownOps = [String: Op]()
     private var knownConstants = [String: Op]()
@@ -115,8 +125,56 @@ class CalculatorBrain {
     private var previousPrecedence:Int?
     private var currentPrecedence:Int?
     
+    //*******************
+    //computed properties
+    //*******************
+    var program:AnyObject{
+        get {
+            return operandStack.map {$0.description}
+        }
+        set {
+            if let newProgram = newValue as? [String] {//I am getting an array of strings, good
+                var newOps = [Op]()
+                for item in newProgram{
+                    if let op = knownOps[item]{
+                        newOps.append(op)
+                    }
+                    else {
+                        if let operand = NSNumberFormatter().numberFromString(item)?.doubleValue{
+                            newOps.append(.Operand(operand))
+                        }
+                        else {//assume a variable
+                            newOps.append(.Variable(item))
+                        }
+                    }
+                    
+                }//iterate through newValue
+//                println("CB:program setter - newOps: \(newOps)")
+                operandStack = newOps
+            }//valid input
+        }//set
+    }
     
+    var description: String? {
+        get {
+            var (result, remainder, _) = describeStack(operandStack)
+            var resultString = result ?? ""
+            //            println("result is \(resultString)")
+            while !remainder.isEmpty {
+                var (result, remainder2, _) = describeStack(remainder)
+                if result != nil {
+                    resultString.splice("\(result!)\(stringSeparator)", atIndex: resultString.startIndex)
+                    remainder = remainder2
+                }
+            }
+            return "\(resultString)"
+        }
+    }
+    
+    
+    //*******************
     //initializer
+    //*******************
     init() {
         
         func learnOps (op:Op){
@@ -142,36 +200,11 @@ class CalculatorBrain {
         
     }
     
-    //*****
+    //*******************
     //API
-    //*****
-    var variableValues = [String: Double]()
-    var errorMessages = Messages()
-    var program:AnyObject{
-        get {
-            return operandStack.map {$0.description}
-        }
-        set {
-            
-        }
-    }
-    
-    var description: String? {
-        get {
-            var (result, remainder, _) = describeStack(operandStack)
-            var resultString = result ?? ""
-            println("result is \(resultString)")
-            while !remainder.isEmpty {
-                var (result, remainder2, _) = describeStack(remainder)
-                if result != nil {
-                    resultString.splice("\(result!),", atIndex: resultString.startIndex)
-                    remainder = remainder2
-                }
-            }
-            return "\(resultString)="
-        }
-    }
-    
+    //*******************
+
+    //pushes a number onto the the stack
     func pushOperand(operand:Double?){
         if let tmpOperand = operand{
             operandStack.append(Op.Operand (operand!))
@@ -180,6 +213,7 @@ class CalculatorBrain {
 
     }
     
+    //pushes a constant or variable onto the the stack
     func pushOperand(operand: String) -> (Double?, String?){
         if let constant = knownConstants[operand]{
             operandStack.append(constant)
@@ -190,6 +224,7 @@ class CalculatorBrain {
         return evaluate()
     }
     
+    //pushes an operation onto the stack
     func pushOperation(symbol: String){
         if let operation = knownOps[symbol]{
             operandStack.append(operation)
@@ -197,13 +232,15 @@ class CalculatorBrain {
         }
     }
     
+    //the heart of it - run the program on the stack
     func evaluate() -> (Double?, String?) {
         let (result, remainder, errMsg) = evaluate(operandStack)
         let msg = errMsg ?? ""
-        println("\(operandStack) = \(result) with \(remainder) and message: \(msg) left over")
+//        println("\(operandStack) = \(result) with \(remainder) and message: \(msg) left over")
         return (result, errMsg)
     }
     
+    //clears the program stack and all variable values
     func clear(){
         operandStack.removeAll(keepCapacity: false)
         variableValues.removeAll(keepCapacity: false)
@@ -226,9 +263,18 @@ class CalculatorBrain {
         return nil
     }
     
+    func getCurrentProgram () -> String? {
+//        println("CB:description:\(self.description)")
+        var (result, remainder, _) = describeStack(operandStack)
+        var resultString = result ?? ""
+        println("CB:getCurrentProgram: \(resultString)")
+        return "\(resultString)"
+        }
 
-    //
-    //internal stuff
+
+    //*******************
+    //internal functions
+    //*******************
     private func evaluate (ops:[Op]) ->(result: Double?, remainingOps:[Op], evalMessage: String?){
         if !ops.isEmpty{
             var remainingOps = ops
@@ -287,8 +333,6 @@ class CalculatorBrain {
     
     //returns a textual expression of the stack content
     private func describeStack(ops:[Op]) -> (result:String?, remainingOps:[Op], precedence:Int?){
-
-        let precedences = Precedences()
         
         if !ops.isEmpty{
             var remainingOps = ops
@@ -311,15 +355,15 @@ class CalculatorBrain {
             case .BinaryOperation(let operation, _):
                 previousPrecedence = currentPrecedence
                 currentPrecedence = op.precedence
-                println("begin case:previous precedence: \(previousPrecedence), current precedence: \(currentPrecedence)")
+//                println("begin case:previous precedence: \(previousPrecedence), current precedence: \(currentPrecedence)")
 
                 let operandEvaluation1 = describeStack(remainingOps)
-                println("operand 1:previous precedence: \(previousPrecedence), current precedence: \(currentPrecedence)")
+//                println("operand 1:previous precedence: \(previousPrecedence), current precedence: \(currentPrecedence)")
                 if let operand1 = operandEvaluation1.result {
                     let operandEvaluation2 = describeStack(operandEvaluation1.remainingOps)
                     
                     if let operand2 = operandEvaluation2.result {
-                        println("operand 2:previous precedence: \(previousPrecedence), current precedence: \(currentPrecedence)")
+//                        println("operand 2:previous precedence: \(previousPrecedence), current precedence: \(currentPrecedence)")
  
                         if currentPrecedence < previousPrecedence {
                             currentPrecedence = nil

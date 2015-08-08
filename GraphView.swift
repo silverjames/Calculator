@@ -10,12 +10,15 @@ import UIKit
 
 
 protocol graphViewdataSource {
-    func getGraphData() -> [Double: Double]
+    func getGraphData() -> ([Double: Double], String?)
 }
 
 @IBDesignable
 class GraphView: UIView {
     
+    //    **************************************
+    //    properties
+    //    **************************************
     @IBInspectable
     var pointsPerUnit: CGFloat = 50.0 { didSet {setNeedsDisplay()}}
     @IBInspectable
@@ -27,8 +30,13 @@ class GraphView: UIView {
     var axis = AxesDrawer()
     var data = [Double : Double]()
     var axisCenter:CGPoint?
-    
-//  computed properties
+    var programToGraph:String?
+    var error:String?
+
+    //    **************************************
+    //    computed properties
+    //    **************************************
+
     var lowerBound: Double {
         if axisCenter == nil{
             return -(bounds.width.native/2)/pointsPerUnit.native
@@ -49,7 +57,10 @@ class GraphView: UIView {
         return convertPoint(center, fromView: superview)}
 
 
-//  drawing goes here
+    //    **************************************
+    //    drawing happens here
+    //    **************************************
+
     override func drawRect(rect: CGRect) {
 
 //      the coordinate system
@@ -58,32 +69,54 @@ class GraphView: UIView {
         
 //      the graph itself
         var graph = UIBezierPath()
-        if let data = dataSource?.getGraphData(){
-            var keys = [Double]()
-            for (x, _) in data{keys.append(x)}
-            var sortedKeys = sorted(keys, <)
-            var startPointSet: Bool = false
-            
-            for x in sortedKeys {
-                if startPointSet {
-                    graph.addLineToPoint(CGPoint(x: (x  * pointsPerUnit.native + axisCenter!.x.native), y: (data[x]! * pointsPerUnit.native + axisCenter!.y.native)))
-                }
-                else {
-                    graph.moveToPoint(CGPoint(x: (x * pointsPerUnit.native + axisCenter!.x.native) , y: (data[x]! * pointsPerUnit.native + axisCenter!.y.native)))
-                    startPointSet = true
-                }
+        if let (data, error) = dataSource?.getGraphData(){
+            if error != nil {
+                programToGraph = error
+            }
+            else{
+                var keys = [Double]()
+                for (x, _) in data{keys.append(x)}
+                var sortedKeys = sorted(keys, <)
+                var startPointSet: Bool = false
                 
-            }//for..in loop
+                for x in sortedKeys {
+                    if startPointSet {
+                        graph.addLineToPoint(CGPoint(x: (x  * pointsPerUnit.native + axisCenter!.x.native), y: (-data[x]! * pointsPerUnit.native + axisCenter!.y.native)))
+                    }
+                    else {
+                        graph.moveToPoint(CGPoint(x: (x * pointsPerUnit.native + axisCenter!.x.native) , y: (-data[x]! * pointsPerUnit.native + axisCenter!.y.native)))
+                        startPointSet = true
+                    }
+                    
+                }//for..in loop
+                
+                graph.lineWidth = lineWidth
+                color.set()
+                graph.stroke()
+            }
             
-            graph.lineWidth = lineWidth
-            color.set()
-            graph.stroke()
-            
-        }// data obtained
+        }
+        
+//      and now an annotation as to what program was graphed
+        if let programDesc = programToGraph{
+            let verticalOffset: CGFloat = 70
+            let horizontalOffset: CGFloat = 0
+            let attributes = [
+                NSFontAttributeName : UIFont.preferredFontForTextStyle(UIFontTextStyleFootnote),
+                NSForegroundColorAttributeName : color
+            ]
+            var textRect = CGRect(origin: CGPointMake(self.bounds.minX + horizontalOffset, self.bounds.minY + verticalOffset), size: programDesc.sizeWithAttributes(attributes))
+            programDesc.drawInRect(textRect, withAttributes: attributes)
+           
+        }
         
     }
 
-    //    gesture handlers
+    
+//    **************************************
+//    gesture handlers
+//    **************************************
+    
     func scale (gesture: UIPinchGestureRecognizer){
         switch gesture.state{
         case .Changed:
@@ -93,6 +126,28 @@ class GraphView: UIView {
             break
         }
     }
+    
+    func handleTap (gesture: UITapGestureRecognizer){
+        if gesture.state == .Ended  {
+            axisCenter = gesture.locationInView(self)
+            setNeedsDisplay()
+        }
+    }
+    
+    func handlePan (gesture: UIPanGestureRecognizer){
+        var translation = gesture.translationInView(self)
+        if let tmpPoint = axisCenter {
+            axisCenter!.x = axisCenter!.x + translation.x
+            axisCenter!.y = axisCenter!.y + translation.y
+            gesture.setTranslation(CGPointZero, inView: self)
+            setNeedsDisplay()
+        }
+        else {
+            println("axisCenter not initialized!")
+        }
+        
+    }//end func
+
 
 }
 

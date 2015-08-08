@@ -36,7 +36,7 @@
 		723432971B42F41C0030D833 /* GraphViewContoller.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GraphViewContoller.swift; path = ../GraphViewContoller.swift; sourceTree = "<group>"; };
 		7234329D1B4470A30030D833 /* GraphView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GraphView.swift; path = ../GraphView.swift; sourceTree = "<group>"; };
 		723C76BA1B16DDC6004040BB /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Media.xcassets; path = ../Media.xcassets; sourceTree = "<group>"; };
-		7264F21F1B467B33001310FD /* GraphViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GraphViewModel.swift; sourceTree = "<group>"; };
+		7264F21F1B467B33001310FD /* GraphViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GraphViewModel.swift; path = ../GraphViewModel.swift; sourceTree = "<group>"; };
 		CB02B87A1ACE2369004B3DC5 /* Calculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Calculator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CB02B87E1ACE2369004B3DC5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CB02B87F1ACE2369004B3DC5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -71,7 +71,6 @@
 		CB02B8711ACE2369004B3DC5 = {
 			isa = PBXGroup;
 			children = (
-				7264F21F1B467B33001310FD /* GraphViewModel.swift */,
 				CB02B87C1ACE2369004B3DC5 /* Calculator */,
 				CB02B8921ACE236A004B3DC5 /* CalculatorTests */,
 				CB02B87B1ACE2369004B3DC5 /* Products */,
@@ -90,6 +89,7 @@
 		CB02B87C1ACE2369004B3DC5 /* Calculator */ = {
 			isa = PBXGroup;
 			children = (
+				7264F21F1B467B33001310FD /* GraphViewModel.swift */,
 				CB82C5681AE3C956006CC145 /* CalculatorBrain.swift */,
 				7234329D1B4470A30030D833 /* GraphView.swift */,
 				723432971B42F41C0030D833 /* GraphViewContoller.swift */,
