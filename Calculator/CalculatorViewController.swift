@@ -11,7 +11,9 @@ import UIKit
 class CalculatorViewController: UIViewController
 {
 
- //declarations
+    //    **************************************
+    //    properties
+    //    **************************************
     @IBOutlet weak var display: UILabel!
     @IBOutlet weak var historyLabel: UILabel!
     
@@ -24,7 +26,7 @@ class CalculatorViewController: UIViewController
         let userDefaultsKey = "Calculator"
         let memoryButton = "M"
     }
-    var constants = Constants()
+    let constants = Constants()
 
     
     var displayValue: Double?{
@@ -44,8 +46,99 @@ class CalculatorViewController: UIViewController
         }
     }
     
-//outlets and actions
-//lifecycle functions
+    //    **************************************
+    //    outlets
+    //    **************************************
+    @IBAction func getMemory() {
+        let (memory, msg) = brain.pushOperand(constants.memoryButton)
+        
+        if memory != nil {
+            displayValue = memory
+            if let desc = brain.description{
+                historyLabel.text = desc + "="
+            }
+        }
+        else{
+            display.text = msg
+        }
+    }
+    
+    @IBAction func setMemory() {
+        if userIsInTheMiddleOfTyping {userIsInTheMiddleOfTyping = false}
+        
+        if display.text != nil{
+            if let value = valueFormatter.numberFromString(display.text!)?.doubleValue {
+                brain.variableValues[constants.memoryButton] = value
+                println("CVC: set mem to \(brain.variableValues[constants.memoryButton])")
+            }
+        }
+    }
+    
+    
+    @IBAction func operate(sender: UIButton) {
+        let operand = sender.currentTitle!
+        if userIsInTheMiddleOfTyping {
+            stackOperand()
+        }
+        brain.pushOperation(operand)
+        enter()
+    }
+    
+    @IBAction func backspace() {
+        if userIsInTheMiddleOfTyping && (display.text != nil){//backspace
+            
+            let lengthOfDisplayText = count (display.text!)
+            if lengthOfDisplayText > 1{
+                display.text = dropLast (display.text!)
+            }
+            else {
+                displayValue = nil
+            }
+        } else {// undo
+            brain.undo()
+            enter()
+        }
+    }
+    
+    @IBAction func sendPi() {
+        //        stackOperand(
+        brain.pushOperand("π")
+        displayValue = brain.getConstantValue("π")
+    }
+    
+    @IBAction func sendDigit(sender: UIButton){
+        let digit = sender.currentTitle!
+        if userIsInTheMiddleOfTyping {
+            if ((display.text?.rangeOfString(".") != nil) && digit != ".") || display.text?.rangeOfString(".") == nil {
+                display.text = display.text! + digit
+            }
+        }
+        else {
+            userIsInTheMiddleOfTyping = true
+            display.text = digit
+        }
+        println("display text: \(display.text)")
+    }
+    
+    
+    @IBAction func clearAll() {
+        historyLabel.text = " "
+        displayValue = nil
+        brain.clear()
+        defaults.removeObjectForKey(constants.userDefaultsKey)
+    }
+    
+    @IBAction func enter() {
+        if userIsInTheMiddleOfTyping{
+            stackOperand()
+        }
+        evaluateAndDisplayResult()
+        
+    }
+
+    //    **************************************
+    //    lifecycle function overrides
+    //    **************************************
     override func viewDidLoad() {
         super.viewDidLoad()
         displayValue = nil
@@ -85,95 +178,10 @@ class CalculatorViewController: UIViewController
         defaults.setObject(brain.program, forKey: constants.userDefaultsKey)
     }
     
-//outlets
-    @IBAction func getMemory() {
-        let (memory, msg) = brain.pushOperand(constants.memoryButton)
-
-        if memory != nil {
-            displayValue = memory
-            if let desc = brain.description{
-                historyLabel.text = desc + "="
-            }
-        }
-        else{
-            display.text = msg
-        }
-    }
     
-    @IBAction func setMemory() {
-        if userIsInTheMiddleOfTyping {userIsInTheMiddleOfTyping = false}
-        
-        if display.text != nil{
-            if let value = valueFormatter.numberFromString(display.text!)?.doubleValue {
-                brain.variableValues[constants.memoryButton] = value
-                println("CVC: set mem to \(brain.variableValues[constants.memoryButton])")
-            }
-        }
-    }
-    
-
-    @IBAction func operate(sender: UIButton) {
-        let operand = sender.currentTitle!
-        if userIsInTheMiddleOfTyping {
-            stackOperand()
-        }
-        brain.pushOperation(operand)
-        enter()
-    }
-    
-    @IBAction func backspace() {
-        if userIsInTheMiddleOfTyping && (display.text != nil){//backspace
-
-            let lengthOfDisplayText = count (display.text!)
-            if lengthOfDisplayText > 1{
-                display.text = dropLast (display.text!)
-            }
-            else {
-                displayValue = nil
-            }
-        } else {// undo
-            brain.undo()
-            enter()
-        }
-    }
-    
-    @IBAction func sendPi() {
-//        stackOperand(
-        brain.pushOperand("π")
-        displayValue = brain.getConstantValue("π")
-    }
-    
-    @IBAction func sendDigit(sender: UIButton){
-        let digit = sender.currentTitle!
-            if userIsInTheMiddleOfTyping {
-                if ((display.text?.rangeOfString(".") != nil) && digit != ".") || display.text?.rangeOfString(".") == nil {
-                    display.text = display.text! + digit
-                }
-            }
-            else {
-                userIsInTheMiddleOfTyping = true
-                display.text = digit
-            }
-        println("display text: \(display.text)")
-    }
-    
-    
-    @IBAction func clearAll() {
-        historyLabel.text = " "
-        displayValue = nil
-        brain.clear()
-        defaults.removeObjectForKey(constants.userDefaultsKey)
-    }
-    
-    @IBAction func enter() {
-        if userIsInTheMiddleOfTyping{
-            stackOperand()
-        }
-        evaluateAndDisplayResult()
-
-    }
-    
-// preparing for segues
+    //    **************************************
+    //    preparing for segues
+    //    **************************************
     override func prepareForSegue(segue: UIStoryboardSegue , sender: AnyObject?) {
         if let identifier = segue.identifier{
             switch identifier{
@@ -188,7 +196,10 @@ class CalculatorViewController: UIViewController
         }
     }
     
-//helper functions
+    //    **************************************
+    //    private API
+    //    **************************************
+
     private func stackOperand(){
         userIsInTheMiddleOfTyping = false
         brain.pushOperand(displayValue)

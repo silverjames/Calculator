@@ -8,7 +8,6 @@
 
 import UIKit
 
-
 protocol graphViewdataSource {
     func getGraphData() -> ([Double: Double], String?)
 }
@@ -20,41 +19,25 @@ class GraphView: UIView {
     //    properties
     //    **************************************
     @IBInspectable
-    var pointsPerUnit: CGFloat = 50.0 { didSet {setNeedsDisplay()}}
+    var scale: CGFloat = 50.0 { didSet {setNeedsDisplay()}}
     @IBInspectable
     var lineWidth: CGFloat = 3 { didSet {setNeedsDisplay()}}
     @IBInspectable
     var color: UIColor = UIColor.blueColor() {didSet {setNeedsDisplay()}}
+
+    var graphOrigin:CGPoint? {didSet {setNeedsDisplay()}}
     
     var dataSource: graphViewdataSource? //the delegate
     var axis = AxesDrawer()
     var data = [Double : Double]()
-    var axisCenter:CGPoint?
     var programToGraph:String?
     var error:String?
+    
+    
 
     //    **************************************
     //    computed properties
     //    **************************************
-
-    var lowerBound: Double {
-        if axisCenter == nil{
-            return -(bounds.width.native/2)/pointsPerUnit.native
-        }
-        else{
-            return -axisCenter!.x.native/pointsPerUnit.native
-        }
-    }
-    var upperBound: Double {
-        if axisCenter == nil {
-            return (bounds.width.native/2)/pointsPerUnit.native
-        }
-        else {
-            return (bounds.width.native - axisCenter!.x.native)/pointsPerUnit.native
-        }
-    }
-    var viewCenter: CGPoint {
-        return convertPoint(center, fromView: superview)}
 
 
     //    **************************************
@@ -63,8 +46,13 @@ class GraphView: UIView {
 
     override func drawRect(rect: CGRect) {
 
+//        if graphOrigin == nil{
+//            graphOrigin = CGPointMake(bounds.midX, bounds.midY)
+//        }
+        
 //      the coordinate system
-        axis.drawAxesInRect(bounds, origin: axisCenter! , pointsPerUnit:pointsPerUnit)
+        axis.contentScaleFactor = self.contentScaleFactor
+        axis.drawAxesInRect(bounds, origin: graphOrigin! , pointsPerUnit:scale)
         
         
 //      the graph itself
@@ -80,14 +68,16 @@ class GraphView: UIView {
                 var startPointSet: Bool = false
                 
                 for x in sortedKeys {
+                    var x0 = (CGFloat(x) * scale) + graphOrigin!.x
+                    var y0 = (CGFloat(-data[x]!) * scale) + graphOrigin!.y
+
                     if startPointSet {
-                        graph.addLineToPoint(CGPoint(x: (x  * pointsPerUnit.native + axisCenter!.x.native), y: (-data[x]! * pointsPerUnit.native + axisCenter!.y.native)))
+                        graph.addLineToPoint(CGPointMake(x0, y0))
                     }
                     else {
-                        graph.moveToPoint(CGPoint(x: (x * pointsPerUnit.native + axisCenter!.x.native) , y: (-data[x]! * pointsPerUnit.native + axisCenter!.y.native)))
+                        graph.moveToPoint(CGPointMake(x0 , y0))
                         startPointSet = true
                     }
-                    
                 }//for..in loop
                 
                 graph.lineWidth = lineWidth
@@ -120,7 +110,7 @@ class GraphView: UIView {
     func scale (gesture: UIPinchGestureRecognizer){
         switch gesture.state{
         case .Changed:
-            pointsPerUnit *= gesture.scale
+            scale *= gesture.scale
             gesture.scale = 1
         default:
             break
@@ -129,23 +119,15 @@ class GraphView: UIView {
     
     func handleTap (gesture: UITapGestureRecognizer){
         if gesture.state == .Ended  {
-            axisCenter = gesture.locationInView(self)
-            setNeedsDisplay()
+            self.graphOrigin = gesture.locationInView(self)
         }
     }
     
     func handlePan (gesture: UIPanGestureRecognizer){
         var translation = gesture.translationInView(self)
-        if let tmpPoint = axisCenter {
-            axisCenter!.x = axisCenter!.x + translation.x
-            axisCenter!.y = axisCenter!.y + translation.y
-            gesture.setTranslation(CGPointZero, inView: self)
-            setNeedsDisplay()
-        }
-        else {
-            println("axisCenter not initialized!")
-        }
-        
+        graphOrigin!.x = graphOrigin!.x + translation.x
+        graphOrigin!.y = graphOrigin!.y + translation.y
+        gesture.setTranslation(CGPointZero, inView: self)
     }//end func
 
 

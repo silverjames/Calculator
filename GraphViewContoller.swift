@@ -16,6 +16,13 @@ class GraphViewController: UIViewController, graphViewdataSource
     var model  = GraphViewModel()
     var programToGraph: String = ""
     var programToLoad: [String] = []
+    var geometry: [CGFloat] = []
+    var defaults = NSUserDefaults.standardUserDefaults()
+
+    struct Constants {
+        let userDefaultsKey = "graphView"
+    }
+    let constants = Constants()
     
     @IBOutlet weak var graphView: GraphView! {
         didSet {
@@ -23,6 +30,7 @@ class GraphViewController: UIViewController, graphViewdataSource
             graphView.addGestureRecognizer(UIPinchGestureRecognizer(target: graphView, action: "scale:"))
             graphView.addGestureRecognizer(UIPanGestureRecognizer(target: graphView, action: "handlePan:"))
             graphView.addGestureRecognizer(UITapGestureRecognizer(target: graphView, action: "handleTap:"))
+            graphView.contentMode = UIViewContentMode.Redraw
             
             updateUI()
         }
@@ -38,12 +46,36 @@ class GraphViewController: UIViewController, graphViewdataSource
                 break
             }
         }
+        
+        if let defaultsData: AnyObject = defaults.objectForKey(constants.userDefaultsKey){
+            println("GVC: found defaults data")
+            if let geometryData = defaultsData as? [CGFloat]{
+                println("GVC:viewDidLoad: geometry readout: \(geometryData)")
+                graphView.scale = geometryData[0]
+                graphView.graphOrigin?.x = geometryData[1]
+                graphView.graphOrigin?.y = geometryData[2]
+            }
+        }
+        updateUI()
     }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(true)
+    }
+    
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        graphView.axisCenter = graphView.viewCenter
-        updateUI()
+
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        geometry.insert(graphView.scale, atIndex: 0)
+        geometry.insert(graphView.graphOrigin!.x, atIndex: 1)
+        geometry.insert(graphView.graphOrigin!.y, atIndex: 2)
+        println("GVC:viewDidAppear: geometry readout: \(geometry)")
+        defaults.setObject(geometry, forKey: constants.userDefaultsKey)
     }
     
     func updateUI() {
@@ -55,9 +87,11 @@ class GraphViewController: UIViewController, graphViewdataSource
     //    **************************************
     
     func    getGraphData() -> ([Double : Double], String?) {
-        model.lowerBound = graphView.lowerBound
-        model.upperBound = graphView.upperBound
-        model.increment = 1/graphView.pointsPerUnit.native
+        var lBounds = -graphView.graphOrigin!.x/graphView.scale
+        var uBounds = (graphView.bounds.width - graphView.graphOrigin!.x)/graphView.scale
+        model.lowerBound = lBounds.native
+        model.upperBound = uBounds.native
+        model.increment = 1/graphView.scale.native
         model.program = programToLoad
         return model.getGraphData()
     }

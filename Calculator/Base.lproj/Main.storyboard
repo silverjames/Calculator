@@ -838,7 +838,6 @@
                             <constraint firstItem="fCx-Bh-3fV" firstAttribute="width" secondItem="yMa-h8-QR0" secondAttribute="width" id="cXH-Pt-ppM"/>
                             <constraint firstItem="so8-5r-EZs" firstAttribute="baseline" secondItem="eV7-7F-sV0" secondAttribute="baseline" id="cZO-rj-Zgm"/>
                             <constraint firstItem="wIQ-dZ-lqj" firstAttribute="baseline" secondItem="J6a-0d-6Vs" secondAttribute="baseline" id="cpS-Wh-gQU"/>
-                            <constraint firstItem="l9B-Rg-b2Y" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="cvp-Qh-5Qk"/>
                             <constraint firstItem="apm-bi-duf" firstAttribute="baseline" secondItem="UhS-bi-Fql" secondAttribute="baseline" id="cwM-Hy-xfo"/>
                             <constraint firstItem="nOC-U7-ewx" firstAttribute="leading" secondItem="apm-bi-duf" secondAttribute="trailing" constant="8" id="dMl-hX-tO7"/>
                             <constraint firstItem="QCj-wG-rId" firstAttribute="width" secondItem="HAw-Lo-a5L" secondAttribute="width" id="dZV-1Z-HgK"/>
@@ -1594,7 +1593,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-993" y="-1343"/>
+            <point key="canvasLocation" x="-7165" y="-7828"/>
         </scene>
         <!--Graph View Controller-->
         <scene sceneID="KFf-nR-XTG">
@@ -1604,11 +1603,11 @@
                         <viewControllerLayoutGuide type="top" id="X3g-MV-M8m"/>
                         <viewControllerLayoutGuide type="bottom" id="eNh-2a-CV6"/>
                     </layoutGuides>
-                    <view key="view" contentMode="redraw" id="sjZ-SF-f0t">
+                    <view key="view" contentMode="redraw" id="sjZ-SF-f0t" customClass="GraphView" customModule="Calculator" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="H2I-OQ-f6s" customClass="GraphView" customModule="Calculator">
+                            <view contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="H2I-OQ-f6s" customClass="GraphView" customModule="Calculator">
                                 <rect key="frame" x="16" y="0.0" width="568" height="600"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <userDefinedRuntimeAttributes>
@@ -1618,8 +1617,8 @@
                                     <userDefinedRuntimeAttribute type="color" keyPath="color">
                                         <color key="value" red="1" green="0.0" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
                                     </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="pointsPerUnit">
-                                        <real key="value" value="100"/>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="scale">
+                                        <real key="value" value="50"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
@@ -1638,7 +1637,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hSb-8N-Gle" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1753" y="-601"/>
+            <point key="canvasLocation" x="-8045" y="-7006"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="mR0-xD-CAT">
@@ -1654,7 +1653,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="l2N-SL-xsk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1753" y="-1343"/>
+            <point key="canvasLocation" x="-8045" y="-7828"/>
         </scene>
         <!--Split View Controller-->
         <scene sceneID="jnB-k5-M1q">
@@ -1667,13 +1666,13 @@
                 </splitViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0Uf-Kv-bbO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2573" y="-1011"/>
+            <point key="canvasLocation" x="-8964" y="-7828"/>
         </scene>
     </scenes>
     <resources>
         <image name="sinus" width="65" height="40"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="DGY-Yq-duC"/>
+        <segue reference="oAg-p3-T4y"/>
     </inferredMetricsTieBreakers>
 </document>
