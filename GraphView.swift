@@ -46,9 +46,9 @@ class GraphView: UIView {
 
     override func drawRect(rect: CGRect) {
 
-//        if graphOrigin == nil{
-//            graphOrigin = CGPointMake(bounds.midX, bounds.midY)
-//        }
+        if graphOrigin == nil{
+            graphOrigin = CGPointMake(bounds.midX, bounds.midY)
+        }
         
 //      the coordinate system
         axis.contentScaleFactor = self.contentScaleFactor

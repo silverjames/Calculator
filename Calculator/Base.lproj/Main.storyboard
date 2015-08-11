@@ -1600,39 +1600,27 @@
             <objects>
                 <viewController id="l6N-uW-XqJ" customClass="GraphViewController" customModule="Calculator" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="X3g-MV-M8m"/>
-                        <viewControllerLayoutGuide type="bottom" id="eNh-2a-CV6"/>
+                        <viewControllerLayoutGuide type="top" id="0sa-Ni-PMa"/>
+                        <viewControllerLayoutGuide type="bottom" id="uuJ-w1-8hb"/>
                     </layoutGuides>
-                    <view key="view" contentMode="redraw" id="sjZ-SF-f0t" customClass="GraphView" customModule="Calculator" customModuleProvider="target">
+                    <view key="view" contentMode="redraw" id="WM5-py-hJ2" customClass="GraphView" customModule="Calculator" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <view contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="H2I-OQ-f6s" customClass="GraphView" customModule="Calculator">
-                                <rect key="frame" x="16" y="0.0" width="568" height="600"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="lineWidth">
-                                        <real key="value" value="1"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="color">
-                                        <color key="value" red="1" green="0.0" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="scale">
-                                        <real key="value" value="50"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </view>
-                        </subviews>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstAttribute="trailingMargin" secondItem="H2I-OQ-f6s" secondAttribute="trailing" id="7bO-9R-hcr"/>
-                            <constraint firstItem="H2I-OQ-f6s" firstAttribute="top" secondItem="sjZ-SF-f0t" secondAttribute="topMargin" id="Asg-dC-P14"/>
-                            <constraint firstAttribute="bottomMargin" secondItem="H2I-OQ-f6s" secondAttribute="bottom" id="BYt-bA-8oj"/>
-                            <constraint firstItem="H2I-OQ-f6s" firstAttribute="leading" secondItem="sjZ-SF-f0t" secondAttribute="leadingMargin" id="tsR-RB-kXD"/>
-                        </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="scale">
+                                <real key="value" value="50"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="color" keyPath="color">
+                                <color key="value" red="1" green="0.0" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="number" keyPath="lineWidth">
+                                <real key="value" value="1"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
                     </view>
                     <connections>
-                        <outlet property="graphView" destination="H2I-OQ-f6s" id="lPk-NV-q9j"/>
+                        <outlet property="graphView" destination="WM5-py-hJ2" id="0OF-43-h82"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hSb-8N-Gle" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1673,6 +1661,6 @@
         <image name="sinus" width="65" height="40"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="oAg-p3-T4y"/>
+        <segue reference="DGY-Yq-duC"/>
     </inferredMetricsTieBreakers>
 </document>

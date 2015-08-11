@@ -24,7 +24,7 @@ class GraphViewController: UIViewController, graphViewdataSource
     }
     let constants = Constants()
     
-    @IBOutlet weak var graphView: GraphView! {
+    @IBOutlet weak var graphView: GraphView!{
         didSet {
             graphView.dataSource = self
             graphView.addGestureRecognizer(UIPinchGestureRecognizer(target: graphView, action: "scale:"))
@@ -35,8 +35,8 @@ class GraphViewController: UIViewController, graphViewdataSource
             updateUI()
         }
     }
-    
-    override func viewDidLoad() {
+
+   override func viewDidLoad() {
         super.viewDidLoad()
         graphView.programToGraph = self.programToGraph
         var countGestures = graphView.gestureRecognizers?.count ?? 0
@@ -52,8 +52,7 @@ class GraphViewController: UIViewController, graphViewdataSource
             if let geometryData = defaultsData as? [CGFloat]{
                 println("GVC:viewDidLoad: geometry readout: \(geometryData)")
                 graphView.scale = geometryData[0]
-                graphView.graphOrigin?.x = geometryData[1]
-                graphView.graphOrigin?.y = geometryData[2]
+                graphView.graphOrigin = CGPointMake(geometryData[1], geometryData[2])
             }
         }
         updateUI()
@@ -66,16 +65,16 @@ class GraphViewController: UIViewController, graphViewdataSource
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-
-    }
-    
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
         geometry.insert(graphView.scale, atIndex: 0)
         geometry.insert(graphView.graphOrigin!.x, atIndex: 1)
         geometry.insert(graphView.graphOrigin!.y, atIndex: 2)
         println("GVC:viewDidAppear: geometry readout: \(geometry)")
         defaults.setObject(geometry, forKey: constants.userDefaultsKey)
+
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
     }
     
     func updateUI() {
