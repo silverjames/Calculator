@@ -72,7 +72,7 @@
                                     </mask>
                                 </variation>
                                 <connections>
-                                    <segue destination="l6N-uW-XqJ" kind="showDetail" identifier="Show Graph" id="DGY-Yq-duC"/>
+                                    <segue destination="gkX-7j-rbV" kind="showDetail" identifier="Show Graph" id="DGY-Yq-duC"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6ya-mA-Ols">
@@ -1619,13 +1619,58 @@
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </view>
+                    <navigationItem key="navigationItem" id="zwb-4Q-nG6">
+                        <barButtonItem key="rightBarButtonItem" title="Statistics" id="OIf-Dz-ZvP">
+                            <connections>
+                                <segue destination="td8-R4-Rgm" kind="popoverPresentation" identifier="showStats" popoverAnchorBarButtonItem="OIf-Dz-ZvP" id="XZe-gK-D9g">
+                                    <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                                </segue>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="graphView" destination="WM5-py-hJ2" id="0OF-43-h82"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hSb-8N-Gle" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-8045" y="-7006"/>
+            <point key="canvasLocation" x="-7165" y="-7006"/>
+        </scene>
+        <!--Statistics View Controller-->
+        <scene sceneID="D3E-fh-oW5">
+            <objects>
+                <viewController id="td8-R4-Rgm" customClass="StatisticsViewController" customModule="Calculator" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="7Ws-ed-buf"/>
+                        <viewControllerLayoutGuide type="bottom" id="5Lk-dX-UUe"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleAspectFit" id="vbo-dj-6eI">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GgQ-sq-asG">
+                                <rect key="frame" x="16" y="0.0" width="568" height="600"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="GgQ-sq-asG" firstAttribute="top" secondItem="vbo-dj-6eI" secondAttribute="top" id="L7M-XC-nrq"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="GgQ-sq-asG" secondAttribute="trailing" id="OYh-et-yk4"/>
+                            <constraint firstItem="GgQ-sq-asG" firstAttribute="bottom" secondItem="5Lk-dX-UUe" secondAttribute="top" id="sYi-2n-W1g"/>
+                            <constraint firstItem="GgQ-sq-asG" firstAttribute="leading" secondItem="vbo-dj-6eI" secondAttribute="leadingMargin" id="wml-67-1Ya"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="textView" destination="GgQ-sq-asG" id="KeP-5v-Dbb"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="0q8-xM-mqY" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-6384" y="-7006"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="mR0-xD-CAT">
@@ -1649,12 +1694,30 @@
                 <splitViewController id="F1G-XF-4P1" sceneMemberID="viewController">
                     <connections>
                         <segue destination="tya-YZ-dLO" kind="relationship" relationship="masterViewController" id="sbw-aR-KiB"/>
-                        <segue destination="l6N-uW-XqJ" kind="showDetail" identifier="split view" id="oAg-p3-T4y"/>
+                        <segue destination="gkX-7j-rbV" kind="showDetail" identifier="split view" id="oAg-p3-T4y"/>
                     </connections>
                 </splitViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0Uf-Kv-bbO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-8964" y="-7828"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="0Cz-1L-mWX">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="gkX-7j-rbV" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Lmt-El-4VC">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="l6N-uW-XqJ" kind="relationship" relationship="rootViewController" id="iNy-dQ-VYA"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="tLL-o1-niu" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-8045" y="-7006"/>
         </scene>
     </scenes>
     <resources>

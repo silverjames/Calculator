@@ -7,8 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		721C7FED1B7A93940046B1EE /* StatisticsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 721C7FEC1B7A93940046B1EE /* StatisticsViewController.swift */; };
 		723432941B42E3780030D833 /* AxesDrawer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723432931B42E3780030D833 /* AxesDrawer.swift */; };
-		723432981B42F41C0030D833 /* GraphViewContoller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723432971B42F41C0030D833 /* GraphViewContoller.swift */; };
+		723432981B42F41C0030D833 /* GraphViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723432971B42F41C0030D833 /* GraphViewController.swift */; };
 		7234329E1B4470A30030D833 /* GraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7234329D1B4470A30030D833 /* GraphView.swift */; };
 		723C76BB1B16DDC6004040BB /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 723C76BA1B16DDC6004040BB /* Media.xcassets */; };
 		7264F2201B467B33001310FD /* GraphViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7264F21F1B467B33001310FD /* GraphViewModel.swift */; };
@@ -32,8 +33,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		721C7FEC1B7A93940046B1EE /* StatisticsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatisticsViewController.swift; sourceTree = "<group>"; };
 		723432931B42E3780030D833 /* AxesDrawer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AxesDrawer.swift; path = ../AxesDrawer.swift; sourceTree = "<group>"; };
-		723432971B42F41C0030D833 /* GraphViewContoller.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GraphViewContoller.swift; path = ../GraphViewContoller.swift; sourceTree = "<group>"; };
+		723432971B42F41C0030D833 /* GraphViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GraphViewController.swift; path = ../GraphViewController.swift; sourceTree = "<group>"; };
 		7234329D1B4470A30030D833 /* GraphView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GraphView.swift; path = ../GraphView.swift; sourceTree = "<group>"; };
 		723C76BA1B16DDC6004040BB /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Media.xcassets; path = ../Media.xcassets; sourceTree = "<group>"; };
 		7264F21F1B467B33001310FD /* GraphViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GraphViewModel.swift; path = ../GraphViewModel.swift; sourceTree = "<group>"; };
@@ -71,6 +73,7 @@
 		CB02B8711ACE2369004B3DC5 = {
 			isa = PBXGroup;
 			children = (
+				721C7FEC1B7A93940046B1EE /* StatisticsViewController.swift */,
 				CB02B87C1ACE2369004B3DC5 /* Calculator */,
 				CB02B8921ACE236A004B3DC5 /* CalculatorTests */,
 				CB02B87B1ACE2369004B3DC5 /* Products */,
@@ -92,7 +95,7 @@
 				7264F21F1B467B33001310FD /* GraphViewModel.swift */,
 				CB82C5681AE3C956006CC145 /* CalculatorBrain.swift */,
 				7234329D1B4470A30030D833 /* GraphView.swift */,
-				723432971B42F41C0030D833 /* GraphViewContoller.swift */,
+				723432971B42F41C0030D833 /* GraphViewController.swift */,
 				723432931B42E3780030D833 /* AxesDrawer.swift */,
 				CB02B8811ACE2369004B3DC5 /* CalculatorViewController.swift */,
 				CB02B8831ACE2369004B3DC5 /* Main.storyboard */,
@@ -235,8 +238,9 @@
 				CB82C5691AE3C956006CC145 /* CalculatorBrain.swift in Sources */,
 				723432941B42E3780030D833 /* AxesDrawer.swift in Sources */,
 				7264F2201B467B33001310FD /* GraphViewModel.swift in Sources */,
+				721C7FED1B7A93940046B1EE /* StatisticsViewController.swift in Sources */,
 				CB02B8821ACE2369004B3DC5 /* CalculatorViewController.swift in Sources */,
-				723432981B42F41C0030D833 /* GraphViewContoller.swift in Sources */,
+				723432981B42F41C0030D833 /* GraphViewController.swift in Sources */,
 				CB02B8801ACE2369004B3DC5 /* AppDelegate.swift in Sources */,
 				7234329E1B4470A30030D833 /* GraphView.swift in Sources */,
 			);

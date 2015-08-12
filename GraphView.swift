@@ -12,6 +12,10 @@ protocol graphViewdataSource {
     func getGraphData() -> ([Double: Double], String?)
 }
 
+protocol saveGeometry{
+    func storeGeometrydata([CGFloat])
+}
+
 @IBDesignable
 class GraphView: UIView {
     
@@ -26,19 +30,28 @@ class GraphView: UIView {
     var color: UIColor = UIColor.blueColor() {didSet {setNeedsDisplay()}}
 
     var graphOrigin:CGPoint? {didSet {setNeedsDisplay()}}
-    
+
     var dataSource: graphViewdataSource? //the delegate
-    var axis = AxesDrawer()
-    var data = [Double : Double]()
+    var geoSaver: saveGeometry?
     var programToGraph:String?
-    var error:String?
     
+    private var axis = AxesDrawer()
+    private var xyDataToGraph = [Double:Double]()
     
 
     //    **************************************
     //    computed properties
     //    **************************************
-
+    var sortedKeys: [Double]{
+        get{
+            var keys = [Double]()
+            for (x, _) in xyDataToGraph{keys.append(x)}
+            return sorted(keys, <)
+        }
+    }
+    //    **************************************
+    //    API
+    //    **************************************
 
     //    **************************************
     //    drawing happens here
@@ -58,25 +71,25 @@ class GraphView: UIView {
 //      the graph itself
         var graph = UIBezierPath()
         if let (data, error) = dataSource?.getGraphData(){
+            xyDataToGraph = data
             if error != nil {
                 programToGraph = error
             }
             else{
-                var keys = [Double]()
-                for (x, _) in data{keys.append(x)}
-                var sortedKeys = sorted(keys, <)
-                var startPointSet: Bool = false
+               var startPointSet: Bool = false
                 
                 for x in sortedKeys {
-                    var x0 = (CGFloat(x) * scale) + graphOrigin!.x
-                    var y0 = (CGFloat(-data[x]!) * scale) + graphOrigin!.y
-
-                    if startPointSet {
-                        graph.addLineToPoint(CGPointMake(x0, y0))
-                    }
-                    else {
-                        graph.moveToPoint(CGPointMake(x0 , y0))
-                        startPointSet = true
+                    if let y = xyDataToGraph[x]{
+                        var x0 = (CGFloat(x) * scale) + graphOrigin!.x
+                        var y0 = (CGFloat(-y) * scale) + graphOrigin!.y
+                        
+                        if startPointSet {
+                            graph.addLineToPoint(CGPointMake(x0, y0))
+                        }
+                        else {
+                            graph.moveToPoint(CGPointMake(x0 , y0))
+                            startPointSet = true
+                        }
                     }
                 }//for..in loop
                 
@@ -100,6 +113,26 @@ class GraphView: UIView {
            
         }
         
+        // save the geometry changes in user defaults
+        var geometry: [CGFloat] = []
+        geometry.insert(self.scale, atIndex: 0)
+        geometry.insert(self.graphOrigin!.x, atIndex: 1)
+        geometry.insert(self.graphOrigin!.y, atIndex: 2)
+        geoSaver?.storeGeometrydata(geometry)
+        
+    }
+    
+    func getStatistics() -> [String:Double]{
+        var statistics: [String:Double] = [:]
+        var values = [Double]()
+        for (_, y) in xyDataToGraph{values.append(y)}
+        var sortedValues = sorted(values, <)
+
+        statistics["min(x) = "] = round(sortedKeys.first!*1000)/1000
+        statistics["max(x) = "] = round(sortedKeys.last!*1000)/1000
+        statistics["min(y) = "] = round(sortedValues.first!*1000)/1000
+        statistics["max(y) = "] = round(sortedValues.last!*1000)/1000
+        return statistics
     }
 
     

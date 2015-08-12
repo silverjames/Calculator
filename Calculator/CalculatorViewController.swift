@@ -20,13 +20,17 @@ class CalculatorViewController: UIViewController
     var userIsInTheMiddleOfTyping: Bool = false
     var brain = CalculatorBrain()
     var valueFormatter = NSNumberFormatter()
-    var defaults = NSUserDefaults.standardUserDefaults()
-    struct Constants {
-        let graphViewSegue = "Show Graph"
-        let userDefaultsKey = "Calculator"
-        let memoryButton = "M"
+    private var defaults = NSUserDefaults.standardUserDefaults()
+    
+    var program: [String]{
+        get{return defaults.objectForKey(Constants.userDefaultsKey) as? [String] ?? []}
+        set{defaults.setObject(newValue, forKey: Constants.userDefaultsKey)}
     }
-    let constants = Constants()
+    struct Constants {
+        static let graphViewSegue = "Show Graph"
+        static let userDefaultsKey = "CalculatorViewController.program"
+        static let memoryButton = "M"
+    }
 
     
     var displayValue: Double?{
@@ -50,7 +54,7 @@ class CalculatorViewController: UIViewController
     //    outlets
     //    **************************************
     @IBAction func getMemory() {
-        let (memory, msg) = brain.pushOperand(constants.memoryButton)
+        let (memory, msg) = brain.pushOperand(Constants.memoryButton)
         
         if memory != nil {
             displayValue = memory
@@ -68,8 +72,8 @@ class CalculatorViewController: UIViewController
         
         if display.text != nil{
             if let value = valueFormatter.numberFromString(display.text!)?.doubleValue {
-                brain.variableValues[constants.memoryButton] = value
-                println("CVC: set mem to \(brain.variableValues[constants.memoryButton])")
+                brain.variableValues[Constants.memoryButton] = value
+//                println("CVC: set mem to \(brain.variableValues[Constants.memoryButton])")
             }
         }
     }
@@ -125,7 +129,7 @@ class CalculatorViewController: UIViewController
         historyLabel.text = " "
         displayValue = nil
         brain.clear()
-        defaults.removeObjectForKey(constants.userDefaultsKey)
+        defaults.removeObjectForKey(Constants.userDefaultsKey)
     }
     
     @IBAction func enter() {
@@ -166,16 +170,14 @@ class CalculatorViewController: UIViewController
             }
         }
         
-        if let defaultsData: AnyObject = defaults.objectForKey(constants.userDefaultsKey){
-            println("CVC: found defaults data")
-            brain.program = defaultsData
+          brain.program = program
  
-        }
+        
     }
     
     override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(false)
-        defaults.setObject(brain.program, forKey: constants.userDefaultsKey)
+        program = brain.program as! [String]
     }
     
     
@@ -183,18 +185,24 @@ class CalculatorViewController: UIViewController
     //    preparing for segues
     //    **************************************
     override func prepareForSegue(segue: UIStoryboardSegue , sender: AnyObject?) {
-        if let identifier = segue.identifier{
-            switch identifier{
-            case Constants().graphViewSegue :
-                if let vc = segue.destinationViewController as? GraphViewController{
-                    vc.programToGraph = brain.getCurrentProgram() ?? ""
-                    vc.programToLoad = brain.program as! [String]
-                    }
-            default:
-                break
+        var destination = segue.destinationViewController as? UIViewController
+
+        if let navCon = destination as? UINavigationController{
+            destination = navCon.visibleViewController
+        }
+        
+        if let gvc = destination as? GraphViewController{
+            if let identifier = segue.identifier{
+                switch identifier{
+                case Constants.graphViewSegue :
+                    gvc.programToGraph = brain.getCurrentProgram() ?? ""
+                    gvc.programToLoad = brain.program as! [String]
+                default:
+                    break
+                }
             }
         }
-    }
+   }
     
     //    **************************************
     //    private API
