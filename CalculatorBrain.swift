@@ -25,7 +25,7 @@ class CalculatorBrain {
         let operandZero = "error: division by zero"
     }
 
-    private enum Op:Printable {
+    private enum Op:CustomStringConvertible {
         case Operand(Double)
         case UnaryOperation(String, Double->Double)
         case BinaryOperation(String, (Double, Double)->Double)
@@ -87,7 +87,7 @@ class CalculatorBrain {
                 case .UnaryOperation(let operation, _):
                     switch operation{
                         case "√":
-                            var checkFunction: (Double) -> String? = checkForNegativeValue
+                            let checkFunction: (Double) -> String? = checkForNegativeValue
                             return checkFunction
                         default:
                             return nil
@@ -96,7 +96,7 @@ class CalculatorBrain {
                 case .BinaryOperation(let operation, _):
                     switch operation {
                         case "÷":
-                            var checkFunction: (Double) -> String? = checkForZeroValue
+                            let checkFunction: (Double) -> String? = checkForZeroValue
                             return checkFunction
                         default:
                             return nil
@@ -163,7 +163,8 @@ class CalculatorBrain {
             while !remainder.isEmpty {
                 var (result, remainder2, _) = describeStack(remainder)
                 if result != nil {
-                    resultString.splice("\(result!)\(stringSeparator)", atIndex: resultString.startIndex)
+                    result?.insert(";", atIndex: (result?.endIndex)!)
+                    resultString.insertContentsOf(result!.characters , at: resultString.startIndex)
                     remainder = remainder2
                 }
             }
@@ -206,7 +207,7 @@ class CalculatorBrain {
 
     //pushes a number onto the the stack
     func pushOperand(operand:Double?){
-        if let tmpOperand = operand{
+        if let _ = operand{
             operandStack.append(Op.Operand (operand!))
         }
 //        println("CalculatorBrain:pushOperand: pushed \(operand)")
@@ -228,14 +229,14 @@ class CalculatorBrain {
     func pushOperation(symbol: String){
         if let operation = knownOps[symbol]{
             operandStack.append(operation)
-            println("CalculatorBrain:pushOperation: pushed \(symbol)")
+            print("CalculatorBrain:pushOperation: pushed \(symbol)")
         }
     }
     
     //the heart of it - run the program on the stack
     func evaluate() -> (Double?, String?) {
-        let (result, remainder, errMsg) = evaluate(operandStack)
-        let msg = errMsg ?? ""
+        let (result, _, errMsg) = evaluate(operandStack)
+//        let msg = errMsg ?? ""
 //        println("\(operandStack) = \(result) with \(remainder) and message: \(msg) left over")
         return (result, errMsg)
     }
@@ -265,9 +266,9 @@ class CalculatorBrain {
     
     func getCurrentProgram () -> String? {
 //        println("CB:description:\(self.description)")
-        var (result, remainder, _) = describeStack(operandStack)
-        var resultString = result ?? ""
-        println("CB:getCurrentProgram: \(resultString)")
+        let (result, _, _) = describeStack(operandStack)
+        let resultString = result ?? ""
+        print("CB:getCurrentProgram: \(resultString)")
         return "\(resultString)"
         }
 
@@ -275,6 +276,8 @@ class CalculatorBrain {
     //*******************
     //internal functions
     //*******************
+    // create an extension for String
+
     private func evaluate (ops:[Op]) ->(result: Double?, remainingOps:[Op], evalMessage: String?){
         if !ops.isEmpty{
             var remainingOps = ops
@@ -340,7 +343,7 @@ class CalculatorBrain {
             
             switch op{
             case .Operand( let operand):
-                var operandString = valueFormatter.stringFromNumber(operand)
+                let operandString = valueFormatter.stringFromNumber(operand)
                 return (operandString, remainingOps, op.precedence)
             
             case .UnaryOperation (let operation, _):
@@ -395,7 +398,5 @@ class CalculatorBrain {
         }
         return (nil, ops, Int.max)
     }
-    
-
     
 }

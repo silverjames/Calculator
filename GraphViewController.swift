@@ -33,7 +33,7 @@ class GraphViewController: UIViewController, graphViewdataSource, saveGeometry, 
     
     @IBOutlet weak var graphView: GraphView!{
         didSet {
-            println("GVC: setting outlet")
+            print("GVC: setting outlet")
             graphView.dataSource = self
             graphView.geoSaver = self
             graphView.addGestureRecognizer(UIPinchGestureRecognizer(target: graphView, action: "scale:"))
@@ -51,10 +51,10 @@ class GraphViewController: UIViewController, graphViewdataSource, saveGeometry, 
     //    **************************************
 
    override func viewDidLoad() {
-        println("GVC: viewDidLoad")
+        print("GVC: viewDidLoad")
         super.viewDidLoad()
         graphView.programToGraph = self.programToGraph
-        var countGestures = graphView.gestureRecognizers?.count ?? 0
+        let countGestures = graphView.gestureRecognizers?.count ?? 0
         for var idx = 0; idx < countGestures; idx++ {
             if let gr = graphView.gestureRecognizers?[idx] as? UITapGestureRecognizer{
                 gr.numberOfTapsRequired = 2
@@ -71,18 +71,18 @@ class GraphViewController: UIViewController, graphViewdataSource, saveGeometry, 
     }
     
     override func viewWillAppear(animated: Bool) {
-        println("GVC: viewWillAppear")
+        print("GVC: viewWillAppear")
         super.viewWillAppear(true)
     }
     
     
     override func viewDidLayoutSubviews() {
-        println("GVC: viewDidLayoutSubviews")
+        print("GVC: viewDidLayoutSubviews")
         super.viewDidLayoutSubviews()
     }
     
     override func viewDidAppear(animated: Bool) {
-        println("GVC: viewDidAppear")
+        print("GVC: viewDidAppear")
         super.viewDidAppear(animated)
     }
     //    **************************************
@@ -103,7 +103,7 @@ class GraphViewController: UIViewController, graphViewdataSource, saveGeometry, 
                         }
                         statsPopover.text = statsPopover.text! + stat
                         statsPopover.text = statsPopover.text! + "\(value)"
-                        statsPopover.text = statsPopover.text! + "\n\r"
+                        statsPopover.text = statsPopover.text! + "\n"
                     }
                 default:
                     break
@@ -116,7 +116,7 @@ class GraphViewController: UIViewController, graphViewdataSource, saveGeometry, 
     //    internal functions
     //    **************************************
     func updateUI() {
-        println("GVC: updateUI")
+        print("GVC: updateUI")
         graphView.setNeedsDisplay()
     }
 
@@ -125,9 +125,9 @@ class GraphViewController: UIViewController, graphViewdataSource, saveGeometry, 
     //    **************************************
     
     func    getGraphData() -> ([Double : Double], String?) {
-        println("GVC: getGraphData")
-        var lBounds = -graphView.graphOrigin!.x/graphView.scale
-        var uBounds = (graphView.bounds.width - graphView.graphOrigin!.x)/graphView.scale
+        print("GVC: getGraphData")
+        let lBounds = -graphView.graphOrigin!.x/graphView.scale
+        let uBounds = (graphView.bounds.width - graphView.graphOrigin!.x)/graphView.scale
         model.lowerBound = lBounds.native
         model.upperBound = uBounds.native
         model.increment = 1/graphView.scale.native
@@ -141,7 +141,7 @@ class GraphViewController: UIViewController, graphViewdataSource, saveGeometry, 
     }
  
     func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
-        return UIModalPresentationStyle.None
+        return UIModalPresentationStyle.Popover
     }
     
 }

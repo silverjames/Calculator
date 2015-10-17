@@ -23,6 +23,7 @@ class StatisticsViewController: UIViewController {
     override var preferredContentSize:CGSize {
         get{
             if textView != nil && presentingViewController != nil{
+                textView.sizeToFit()
                 return textView.sizeThatFits(presentingViewController!.view.bounds.size)
             }
             else{

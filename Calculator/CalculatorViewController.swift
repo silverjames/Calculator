@@ -35,7 +35,7 @@ class CalculatorViewController: UIViewController
     
     var displayValue: Double?{
         get {
-            if let displayTxt = display.text {
+            if let _ = display.text {
                 return valueFormatter.numberFromString(display.text!)?.doubleValue
             }
                 return nil
@@ -91,9 +91,9 @@ class CalculatorViewController: UIViewController
     @IBAction func backspace() {
         if userIsInTheMiddleOfTyping && (display.text != nil){//backspace
             
-            let lengthOfDisplayText = count (display.text!)
+            let lengthOfDisplayText = (display.text!).characters.count
             if lengthOfDisplayText > 1{
-                display.text = dropLast (display.text!)
+                display.text = String((display.text!).characters.dropLast ())
             }
             else {
                 displayValue = nil
@@ -121,7 +121,7 @@ class CalculatorViewController: UIViewController
             userIsInTheMiddleOfTyping = true
             display.text = digit
         }
-        println("display text: \(display.text)")
+        print("display text: \(display.text)")
     }
     
     

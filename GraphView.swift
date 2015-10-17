@@ -13,7 +13,7 @@ protocol graphViewdataSource {
 }
 
 protocol saveGeometry{
-    func storeGeometrydata([CGFloat])
+    func storeGeometrydata(_: [CGFloat])
 }
 
 @IBDesignable
@@ -46,7 +46,7 @@ class GraphView: UIView {
         get{
             var keys = [Double]()
             for (x, _) in xyDataToGraph{keys.append(x)}
-            return sorted(keys, <)
+            return keys.sort(<)
         }
     }
     //    **************************************
@@ -69,7 +69,7 @@ class GraphView: UIView {
         
         
 //      the graph itself
-        var graph = UIBezierPath()
+        let graph = UIBezierPath()
         if let (data, error) = dataSource?.getGraphData(){
             xyDataToGraph = data
             if error != nil {
@@ -80,8 +80,8 @@ class GraphView: UIView {
                 
                 for x in sortedKeys {
                     if let y = xyDataToGraph[x]{
-                        var x0 = (CGFloat(x) * scale) + graphOrigin!.x
-                        var y0 = (CGFloat(-y) * scale) + graphOrigin!.y
+                        let x0 = (CGFloat(x) * scale) + graphOrigin!.x
+                        let y0 = (CGFloat(-y) * scale) + graphOrigin!.y
                         
                         if startPointSet {
                             graph.addLineToPoint(CGPointMake(x0, y0))
@@ -108,7 +108,7 @@ class GraphView: UIView {
                 NSFontAttributeName : UIFont.preferredFontForTextStyle(UIFontTextStyleFootnote),
                 NSForegroundColorAttributeName : color
             ]
-            var textRect = CGRect(origin: CGPointMake(self.bounds.minX + horizontalOffset, self.bounds.minY + verticalOffset), size: programDesc.sizeWithAttributes(attributes))
+            let textRect = CGRect(origin: CGPointMake(self.bounds.minX + horizontalOffset, self.bounds.minY + verticalOffset), size: programDesc.sizeWithAttributes(attributes))
             programDesc.drawInRect(textRect, withAttributes: attributes)
            
         }
@@ -126,7 +126,7 @@ class GraphView: UIView {
         var statistics: [String:Double] = [:]
         var values = [Double]()
         for (_, y) in xyDataToGraph{values.append(y)}
-        var sortedValues = sorted(values, <)
+        let sortedValues = values.sort(<)
 
         statistics["min(x) = "] = round(sortedKeys.first!*1000)/1000
         statistics["max(x) = "] = round(sortedKeys.last!*1000)/1000
@@ -157,7 +157,7 @@ class GraphView: UIView {
     }
     
     func handlePan (gesture: UIPanGestureRecognizer){
-        var translation = gesture.translationInView(self)
+        let translation = gesture.translationInView(self)
         graphOrigin!.x = graphOrigin!.x + translation.x
         graphOrigin!.y = graphOrigin!.y + translation.y
         gesture.setTranslation(CGPointZero, inView: self)
