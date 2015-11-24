@@ -26,7 +26,10 @@ class GraphViewModel: AnyObject, graphViewdataSource  {
         while stepper <= upperBound{
             brain.variableValues["M"] = stepper
             let (result, errMsg) = brain.evaluate()
-            if let _ = errMsg {break}
+            if errMsg != nil{
+                error = errMsg
+                break
+            }
             data[stepper] = result
             stepper = stepper + increment
         }

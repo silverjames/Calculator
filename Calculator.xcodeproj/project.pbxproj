@@ -13,6 +13,8 @@
 		7234329E1B4470A30030D833 /* GraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7234329D1B4470A30030D833 /* GraphView.swift */; };
 		723C76BB1B16DDC6004040BB /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 723C76BA1B16DDC6004040BB /* Media.xcassets */; };
 		7264F2201B467B33001310FD /* GraphViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7264F21F1B467B33001310FD /* GraphViewModel.swift */; };
+		7267366E1BF389140075E144 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 726736701BF389140075E144 /* InfoPlist.strings */; };
+		726736731BF389140075E144 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 726736751BF389140075E144 /* InfoPlist.strings */; };
 		CB02B8801ACE2369004B3DC5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB02B87F1ACE2369004B3DC5 /* AppDelegate.swift */; };
 		CB02B8821ACE2369004B3DC5 /* CalculatorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB02B8811ACE2369004B3DC5 /* CalculatorViewController.swift */; };
 		CB02B8851ACE2369004B3DC5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CB02B8831ACE2369004B3DC5 /* Main.storyboard */; };
@@ -33,12 +35,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		721C7FEC1B7A93940046B1EE /* StatisticsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatisticsViewController.swift; sourceTree = "<group>"; };
+		721C7FEC1B7A93940046B1EE /* StatisticsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StatisticsViewController.swift; path = ../StatisticsViewController.swift; sourceTree = "<group>"; };
 		723432931B42E3780030D833 /* AxesDrawer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AxesDrawer.swift; path = ../AxesDrawer.swift; sourceTree = "<group>"; };
 		723432971B42F41C0030D833 /* GraphViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GraphViewController.swift; path = ../GraphViewController.swift; sourceTree = "<group>"; };
 		7234329D1B4470A30030D833 /* GraphView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GraphView.swift; path = ../GraphView.swift; sourceTree = "<group>"; };
 		723C76BA1B16DDC6004040BB /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Media.xcassets; path = ../Media.xcassets; sourceTree = "<group>"; };
 		7264F21F1B467B33001310FD /* GraphViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GraphViewModel.swift; path = ../GraphViewModel.swift; sourceTree = "<group>"; };
+		7267366A1BF315820075E144 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Main.strings; sourceTree = "<group>"; };
+		7267366B1BF315820075E144 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		7267366F1BF389140075E144 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		726736741BF389140075E144 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		CB02B87A1ACE2369004B3DC5 /* Calculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Calculator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CB02B87E1ACE2369004B3DC5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CB02B87F1ACE2369004B3DC5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -73,7 +79,6 @@
 		CB02B8711ACE2369004B3DC5 = {
 			isa = PBXGroup;
 			children = (
-				721C7FEC1B7A93940046B1EE /* StatisticsViewController.swift */,
 				CB02B87C1ACE2369004B3DC5 /* Calculator */,
 				CB02B8921ACE236A004B3DC5 /* CalculatorTests */,
 				CB02B87B1ACE2369004B3DC5 /* Products */,
@@ -92,6 +97,7 @@
 		CB02B87C1ACE2369004B3DC5 /* Calculator */ = {
 			isa = PBXGroup;
 			children = (
+				721C7FEC1B7A93940046B1EE /* StatisticsViewController.swift */,
 				7264F21F1B467B33001310FD /* GraphViewModel.swift */,
 				CB82C5681AE3C956006CC145 /* CalculatorBrain.swift */,
 				7234329D1B4470A30030D833 /* GraphView.swift */,
@@ -107,6 +113,7 @@
 		CB02B87D1ACE2369004B3DC5 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				726736751BF389140075E144 /* InfoPlist.strings */,
 				723C76BA1B16DDC6004040BB /* Media.xcassets */,
 				CB02B87F1ACE2369004B3DC5 /* AppDelegate.swift */,
 				CB02B8881ACE2369004B3DC5 /* LaunchScreen.xib */,
@@ -128,6 +135,7 @@
 		CB02B8931ACE236A004B3DC5 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				726736701BF389140075E144 /* InfoPlist.strings */,
 				CB02B8941ACE236A004B3DC5 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -220,6 +228,7 @@
 				CB02B88A1ACE2369004B3DC5 /* LaunchScreen.xib in Resources */,
 				723C76BB1B16DDC6004040BB /* Media.xcassets in Resources */,
 				CB02B8871ACE2369004B3DC5 /* Images.xcassets in Resources */,
+				726736731BF389140075E144 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -227,6 +236,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7267366E1BF389140075E144 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -267,10 +277,27 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		726736701BF389140075E144 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7267366F1BF389140075E144 /* de */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		726736751BF389140075E144 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				726736741BF389140075E144 /* de */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
 		CB02B8831ACE2369004B3DC5 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
 				CB02B8841ACE2369004B3DC5 /* Base */,
+				7267366A1BF315820075E144 /* de */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -279,6 +306,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				CB02B8891ACE2369004B3DC5 /* Base */,
+				7267366B1BF315820075E144 /* de */,
 			);
 			name = LaunchScreen.xib;
 			sourceTree = "<group>";
@@ -321,7 +349,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -358,7 +386,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";

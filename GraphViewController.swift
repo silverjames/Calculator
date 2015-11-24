@@ -10,6 +10,7 @@ import UIKit
 
 class GraphViewController: UIViewController, graphViewdataSource, saveGeometry, UIPopoverPresentationControllerDelegate
 {
+    //MARK: properties
     //    **************************************
     //    properties and outlets
     //    **************************************
@@ -31,6 +32,7 @@ class GraphViewController: UIViewController, graphViewdataSource, saveGeometry, 
 
 
     
+    //MARK: outlets
     @IBOutlet weak var graphView: GraphView!{
         didSet {
             print("GVC: setting outlet")
@@ -46,6 +48,7 @@ class GraphViewController: UIViewController, graphViewdataSource, saveGeometry, 
     }
     
 
+    //MARK: lifecycle function overrides
     //    **************************************
     //    lifecycle function overrides
     //    **************************************
@@ -85,6 +88,7 @@ class GraphViewController: UIViewController, graphViewdataSource, saveGeometry, 
         print("GVC: viewDidAppear")
         super.viewDidAppear(animated)
     }
+    //MARK: prepare for segues
     //    **************************************
     //    preparing for segues
     //    **************************************
@@ -111,7 +115,8 @@ class GraphViewController: UIViewController, graphViewdataSource, saveGeometry, 
             }
         }
     }
-    
+
+    //MARK:  API
     //    **************************************
     //    internal functions
     //    **************************************
@@ -125,7 +130,7 @@ class GraphViewController: UIViewController, graphViewdataSource, saveGeometry, 
     //    **************************************
     
     func    getGraphData() -> ([Double : Double], String?) {
-        print("GVC: getGraphData")
+//        print("GVC: getGraphData")
         let lBounds = -graphView.graphOrigin!.x/graphView.scale
         let uBounds = (graphView.bounds.width - graphView.graphOrigin!.x)/graphView.scale
         model.lowerBound = lBounds.native

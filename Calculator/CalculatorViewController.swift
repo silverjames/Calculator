@@ -10,17 +10,21 @@ import UIKit
 
 class CalculatorViewController: UIViewController
 {
-
+    //MARK: properties
     //    **************************************
     //    properties
     //    **************************************
     @IBOutlet weak var display: UILabel!
     @IBOutlet weak var historyLabel: UILabel!
+    @IBOutlet weak var messageLine: UILabel!
+    
     
     var userIsInTheMiddleOfTyping: Bool = false
     var brain = CalculatorBrain()
-    var valueFormatter = NSNumberFormatter()
+    private var formatter = NSNumberFormatter()
+    private var locale = NSLocale.currentLocale()
     private var defaults = NSUserDefaults.standardUserDefaults()
+    private var localeDecimalSeparator:String?
     
     var program: [String]{
         get{return defaults.objectForKey(Constants.userDefaultsKey) as? [String] ?? []}
@@ -36,7 +40,7 @@ class CalculatorViewController: UIViewController
     var displayValue: Double?{
         get {
             if let _ = display.text {
-                return valueFormatter.numberFromString(display.text!)?.doubleValue
+                return formatter.numberFromString(display.text!)?.doubleValue
             }
                 return nil
         }
@@ -49,7 +53,7 @@ class CalculatorViewController: UIViewController
             }
         }
     }
-    
+    //MARK: outlets
     //    **************************************
     //    outlets
     //    **************************************
@@ -71,7 +75,7 @@ class CalculatorViewController: UIViewController
         if userIsInTheMiddleOfTyping {userIsInTheMiddleOfTyping = false}
         
         if display.text != nil{
-            if let value = valueFormatter.numberFromString(display.text!)?.doubleValue {
+            if let value = formatter.numberFromString(display.text!)?.doubleValue {
                 brain.variableValues[Constants.memoryButton] = value
 //                println("CVC: set mem to \(brain.variableValues[Constants.memoryButton])")
             }
@@ -105,15 +109,15 @@ class CalculatorViewController: UIViewController
     }
     
     @IBAction func sendPi() {
-        //        stackOperand(
         brain.pushOperand("π")
         displayValue = brain.getConstantValue("π")
     }
     
     @IBAction func sendDigit(sender: UIButton){
+        messageLine.text = " "
         let digit = sender.currentTitle!
         if userIsInTheMiddleOfTyping {
-            if ((display.text?.rangeOfString(".") != nil) && digit != ".") || display.text?.rangeOfString(".") == nil {
+            if ((display.text?.rangeOfString(localeDecimalSeparator!) != nil) && digit != localeDecimalSeparator!) || display.text?.rangeOfString(localeDecimalSeparator!) == nil {
                 display.text = display.text! + digit
             }
         }
@@ -127,6 +131,7 @@ class CalculatorViewController: UIViewController
     
     @IBAction func clearAll() {
         historyLabel.text = " "
+        messageLine.text = " "
         displayValue = nil
         brain.clear()
         defaults.removeObjectForKey(Constants.userDefaultsKey)
@@ -139,7 +144,9 @@ class CalculatorViewController: UIViewController
         evaluateAndDisplayResult()
         
     }
-
+    
+    
+    //MARK: lifecycle function overrides
     //    **************************************
     //    lifecycle function overrides
     //    **************************************
@@ -147,10 +154,12 @@ class CalculatorViewController: UIViewController
         super.viewDidLoad()
         displayValue = nil
         historyLabel.text = " "
+        messageLine.text = " "
 
-        valueFormatter.locale = NSLocale.currentLocale()
-        valueFormatter.numberStyle = .DecimalStyle
-        valueFormatter.generatesDecimalNumbers = true
+//        valueFormatter.locale = NSLocale.currentLocale()
+//        valueFormatter.numberStyle = .DecimalStyle
+//        valueFormatter.generatesDecimalNumbers = true
+        localeDecimalSeparator = formatter.decimalSeparator
         
         for button in view.subviews{
             if button is UIButton {
@@ -171,7 +180,6 @@ class CalculatorViewController: UIViewController
         }
         
           brain.program = program
- 
         
     }
     
@@ -181,6 +189,7 @@ class CalculatorViewController: UIViewController
     }
     
     
+    //MARK: prepare for segues
     //    **************************************
     //    preparing for segues
     //    **************************************
@@ -204,6 +213,7 @@ class CalculatorViewController: UIViewController
         }
    }
     
+    //MARK: private API
     //    **************************************
     //    private API
     //    **************************************
@@ -216,7 +226,7 @@ class CalculatorViewController: UIViewController
     private func evaluateAndDisplayResult() {
         let (tmpValue, errMsg) = brain.evaluate()
         if errMsg != nil {
-            display.text = errMsg
+            messageLine.text = errMsg
         }
         else {
             displayValue = tmpValue

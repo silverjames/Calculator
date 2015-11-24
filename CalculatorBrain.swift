@@ -9,7 +9,7 @@
 import Foundation
 
 class CalculatorBrain {
-    
+    //MARK: properties
     //*******************
     //structure and enums
     //*******************
@@ -121,7 +121,8 @@ class CalculatorBrain {
     private var operandStack = [Op]()
     private var knownOps = [String: Op]()
     private var knownConstants = [String: Op]()
-    private var valueFormatter = NSNumberFormatter()
+    private var formatter = NSNumberFormatter()
+    private var localeEN = NSLocale.init(localeIdentifier: "EN-en")
     private var previousPrecedence:Int?
     private var currentPrecedence:Int?
     
@@ -133,14 +134,18 @@ class CalculatorBrain {
             return operandStack.map {$0.description}
         }
         set {
+//            valueFormatter.locale = NSLocale.currentLocale()
+//            valueFormatter.numberStyle = .DecimalStyle
+            
             if let newProgram = newValue as? [String] {//I am getting an array of strings, good
                 var newOps = [Op]()
+                formatter.locale = localeEN
                 for item in newProgram{
                     if let op = knownOps[item]{
                         newOps.append(op)
                     }
                     else {
-                        if let operand = NSNumberFormatter().numberFromString(item)?.doubleValue{
+                        if let operand = formatter.numberFromString(item)?.doubleValue{
                             newOps.append(.Operand(operand))
                         }
                         else {//assume a variable
@@ -194,13 +199,13 @@ class CalculatorBrain {
         
         learnConst(.Constant("π", 3.141592653589793))
 
-        valueFormatter.locale = NSLocale.currentLocale()
-        valueFormatter.numberStyle = .DecimalStyle
-        valueFormatter.generatesDecimalNumbers = true
+//        formatter.locale = NSLocale.currentLocale()
+//        valueFormatter.numberStyle = .DecimalStyle
+//        valueFormatter.generatesDecimalNumbers = true
         
         
     }
-    
+    //MARK: API
     //*******************
     //API
     //*******************
@@ -235,9 +240,9 @@ class CalculatorBrain {
     
     //the heart of it - run the program on the stack
     func evaluate() -> (Double?, String?) {
-        let (result, _, errMsg) = evaluate(operandStack)
+        let (result, remainder, errMsg) = evaluate(operandStack)
 //        let msg = errMsg ?? ""
-//        println("\(operandStack) = \(result) with \(remainder) and message: \(msg) left over")
+        print("CB:\(operandStack) = \(result) with \(remainder) and message: \(errMsg) left over")
         return (result, errMsg)
     }
     
@@ -272,20 +277,22 @@ class CalculatorBrain {
         return "\(resultString)"
         }
 
-
+    //MARK: internal functions
     //*******************
     //internal functions
     //*******************
-    // create an extension for String
 
     private func evaluate (ops:[Op]) ->(result: Double?, remainingOps:[Op], evalMessage: String?){
         if !ops.isEmpty{
             var remainingOps = ops
             let op = remainingOps.removeLast()
+            print ("processing op: \(op)")
             switch op {
             case .Operand(let operand):
+                    print("this is an operand...")
                     return (operand, remainingOps, nil)
             case .UnaryOperation(_, let operation):
+                print("this is an unary ops...")
                 let operandEvaluation = evaluate(remainingOps)
                 if operandEvaluation.result != nil{
                     if let msg = op.errorCheck?(operandEvaluation.result!){
@@ -299,6 +306,7 @@ class CalculatorBrain {
                     return (nil, remainingOps, errorMessages.argMissing)
                 }
             case .BinaryOperation(_, let operation):
+                print("this is a binary ops...")
                 let operandEvaluation1 = evaluate(remainingOps)
                 if let operand1 = operandEvaluation1.result{
                     if let msg = op.errorCheck?(operandEvaluation1.result!){
@@ -319,6 +327,7 @@ class CalculatorBrain {
                 }
 
             case .Variable(let variable):
+                print("this is a variable...")
                 if let variableValue = variableValues[variable]{
                     return (variableValue, remainingOps, nil)
                 }
@@ -326,6 +335,7 @@ class CalculatorBrain {
                     return (nil, remainingOps, nil)
                 }
             case .Constant(_, let constValue):
+                print("this is a    constant...")
                 return (constValue, remainingOps, nil)
                 
             }
@@ -336,6 +346,7 @@ class CalculatorBrain {
     
     //returns a textual expression of the stack content
     private func describeStack(ops:[Op]) -> (result:String?, remainingOps:[Op], precedence:Int?){
+//        valueFormatter.locale = locale
         
         if !ops.isEmpty{
             var remainingOps = ops
@@ -343,7 +354,7 @@ class CalculatorBrain {
             
             switch op{
             case .Operand( let operand):
-                let operandString = valueFormatter.stringFromNumber(operand)
+                let operandString = formatter.stringFromNumber(operand)
                 return (operandString, remainingOps, op.precedence)
             
             case .UnaryOperation (let operation, _):
