@@ -17,11 +17,11 @@ class GraphViewController: UIViewController, graphViewdataSource, saveGeometry, 
     var model  = GraphViewModel()
     var programToGraph: String = ""
     var programToLoad: [String] = []
-    private var defaults = NSUserDefaults.standardUserDefaults()
+    fileprivate var defaults = UserDefaults.standard
 
     var geometry: [CGFloat]{
-        get {return defaults.objectForKey(Constants.userDefaultsKey) as? [CGFloat] ?? []}
-        set {defaults.setObject(newValue, forKey: Constants.userDefaultsKey)}
+        get {return defaults.object(forKey: Constants.userDefaultsKey) as? [CGFloat] ?? []}
+        set {defaults.set(newValue, forKey: Constants.userDefaultsKey)}
     }
 
     struct Constants {
@@ -41,7 +41,7 @@ class GraphViewController: UIViewController, graphViewdataSource, saveGeometry, 
             graphView.addGestureRecognizer(UIPinchGestureRecognizer(target: graphView, action: "scale:"))
             graphView.addGestureRecognizer(UIPanGestureRecognizer(target: graphView, action: "handlePan:"))
             graphView.addGestureRecognizer(UITapGestureRecognizer(target: graphView, action: "handleTap:"))
-            graphView.contentMode = UIViewContentMode.Redraw
+            graphView.contentMode = UIViewContentMode.redraw
             
             updateUI()
         }
@@ -58,7 +58,7 @@ class GraphViewController: UIViewController, graphViewdataSource, saveGeometry, 
         super.viewDidLoad()
         graphView.programToGraph = self.programToGraph
         let countGestures = graphView.gestureRecognizers?.count ?? 0
-        for var idx = 0; idx < countGestures; idx++ {
+        for idx in 0 ..< countGestures {
             if let gr = graphView.gestureRecognizers?[idx] as? UITapGestureRecognizer{
                 gr.numberOfTapsRequired = 2
                 break
@@ -67,13 +67,13 @@ class GraphViewController: UIViewController, graphViewdataSource, saveGeometry, 
     
         if !geometry.isEmpty{
             graphView.scale = geometry[0]
-            graphView.graphOrigin = CGPointMake(geometry[1], geometry[2])
+            graphView.graphOrigin = CGPoint(x: geometry[1], y: geometry[2])
         }
     
         updateUI()
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         print("GVC: viewWillAppear")
         super.viewWillAppear(true)
     }
@@ -84,7 +84,7 @@ class GraphViewController: UIViewController, graphViewdataSource, saveGeometry, 
         super.viewDidLayoutSubviews()
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         print("GVC: viewDidAppear")
         super.viewDidAppear(animated)
     }
@@ -93,8 +93,8 @@ class GraphViewController: UIViewController, graphViewdataSource, saveGeometry, 
     //    preparing for segues
     //    **************************************
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if let statsPopover = segue.destinationViewController as? StatisticsViewController{
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let statsPopover = segue.destination as? StatisticsViewController{
             if let identifier = segue.identifier{
                 switch identifier{
                 case Constants.statisticsSegue:
@@ -140,13 +140,13 @@ class GraphViewController: UIViewController, graphViewdataSource, saveGeometry, 
         return model.getGraphData()
     }
     
-    func    storeGeometrydata(data: [CGFloat]) {
+    func    storeGeometrydata(_ data: [CGFloat]) {
         geometry = data
         
     }
  
-    func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
-        return UIModalPresentationStyle.Popover
+    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+        return UIModalPresentationStyle.popover
     }
     
 }

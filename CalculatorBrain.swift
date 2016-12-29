@@ -7,6 +7,19 @@
 //
 
 import Foundation
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
 
 class CalculatorBrain {
     //MARK: properties
@@ -25,25 +38,25 @@ class CalculatorBrain {
         let operandZero = "error: division by zero"
     }
 
-    private enum Op:CustomStringConvertible {
-        case Operand(Double)
-        case UnaryOperation(String, Double->Double)
-        case BinaryOperation(String, (Double, Double)->Double)
-        case Variable(String)
-        case Constant(String, Double)
+    fileprivate enum Op:CustomStringConvertible {
+        case operand(Double)
+        case unaryOperation(String, (Double)->Double)
+        case binaryOperation(String, (Double, Double)->Double)
+        case variable(String)
+        case constant(String, Double)
         
         var description: String {
             get {
                 switch self{
-                case .Operand(let operand):
+                case .operand(let operand):
                         return "\(operand)"
-                case .UnaryOperation(let symbol, _):
+                case .unaryOperation(let symbol, _):
                         return symbol
-                case .BinaryOperation(let symbol, _):
+                case .binaryOperation(let symbol, _):
                         return symbol
-                case .Variable(let symbol):
+                case .variable(let symbol):
                     return symbol
-                case .Constant(let symbol, _):
+                case .constant(let symbol, _):
                     return symbol
                 }
             }
@@ -53,7 +66,7 @@ class CalculatorBrain {
             get {
                 let precedence = Precedences()
                 switch self{
-                    case .BinaryOperation(let operation, _):
+                    case .binaryOperation(let operation, _):
                         switch operation{
                             case "+", "−":
                                 return precedence.low
@@ -73,18 +86,18 @@ class CalculatorBrain {
             
             get {
                 let errorMessages = Messages()
-                func checkForNegativeValue (arg: Double) -> String? {
+                func checkForNegativeValue (_ arg: Double) -> String? {
                     if arg < 0 {return errorMessages.negOperand}
                     return nil
                 }
                 
-                func checkForZeroValue (arg: Double) -> String? {
+                func checkForZeroValue (_ arg: Double) -> String? {
                     if arg == 0 {return errorMessages.operandZero}
                     return nil
                 }
 
                 switch self{
-                case .UnaryOperation(let operation, _):
+                case .unaryOperation(let operation, _):
                     switch operation{
                         case "√":
                             let checkFunction: (Double) -> String? = checkForNegativeValue
@@ -93,7 +106,7 @@ class CalculatorBrain {
                             return nil
                     }
                     
-                case .BinaryOperation(let operation, _):
+                case .binaryOperation(let operation, _):
                     switch operation {
                         case "÷":
                             let checkFunction: (Double) -> String? = checkForZeroValue
@@ -115,21 +128,21 @@ class CalculatorBrain {
     
     var variableValues = [String: Double]()
 
-    private let errorMessages = Messages()
-    private let precedences = Precedences()
-    private let stringSeparator:String = ";"
-    private var operandStack = [Op]()
-    private var knownOps = [String: Op]()
-    private var knownConstants = [String: Op]()
-    private var formatter = NSNumberFormatter()
-    private var localeEN = NSLocale.init(localeIdentifier: "EN-en")
-    private var previousPrecedence:Int?
-    private var currentPrecedence:Int?
+    fileprivate let errorMessages = Messages()
+    fileprivate let precedences = Precedences()
+    fileprivate let stringSeparator:String = ";"
+    fileprivate var operandStack = [Op]()
+    fileprivate var knownOps = [String: Op]()
+    fileprivate var knownConstants = [String: Op]()
+    fileprivate var formatter = NumberFormatter()
+    fileprivate var localeEN = Locale.init(identifier: "EN-en")
+    fileprivate var previousPrecedence:Int?
+    fileprivate var currentPrecedence:Int?
     
     //*******************
     //computed properties
     //*******************
-    var program:AnyObject{
+    var program:[String]{
         get {
             return operandStack.map {$0.description}
         }
@@ -145,11 +158,11 @@ class CalculatorBrain {
                         newOps.append(op)
                     }
                     else {
-                        if let operand = formatter.numberFromString(item)?.doubleValue{
-                            newOps.append(.Operand(operand))
+                        if let operand = formatter.number(from: item)?.doubleValue{
+                            newOps.append(.operand(operand))
                         }
                         else {//assume a variable
-                            newOps.append(.Variable(item))
+                            newOps.append(.variable(item))
                         }
                     }
                     
@@ -168,8 +181,8 @@ class CalculatorBrain {
             while !remainder.isEmpty {
                 var (result, remainder2, _) = describeStack(remainder)
                 if result != nil {
-                    result?.insert(";", atIndex: (result?.endIndex)!)
-                    resultString.insertContentsOf(result!.characters , at: resultString.startIndex)
+                    result?.insert(";", at: (result?.endIndex)!)
+                    resultString.insert(contentsOf: result!.characters , at: resultString.startIndex)
                     remainder = remainder2
                 }
             }
@@ -183,21 +196,21 @@ class CalculatorBrain {
     //*******************
     init() {
         
-        func learnOps (op:Op){
+        func learnOps (_ op:Op){
             knownOps[op.description] = op
         }
-        func learnConst (op:Op){
+        func learnConst (_ op:Op){
             knownConstants[op.description] = op
         }
-        learnOps(.BinaryOperation("×", {$0 * $1}))
-        learnOps(.BinaryOperation("÷", {$1 / $0}))
-        learnOps(.BinaryOperation("+", {$0 + $1}))
-        learnOps(.BinaryOperation("−", {$1 - $0}))
-        learnOps(.UnaryOperation("√", {sqrt($0)}))
-        learnOps(.UnaryOperation("sin", {sin($0)}))
-        learnOps(.UnaryOperation("cos", {cos($0)}))
+        learnOps(.binaryOperation("×", {$0 * $1}))
+        learnOps(.binaryOperation("÷", {$1 / $0}))
+        learnOps(.binaryOperation("+", {$0 + $1}))
+        learnOps(.binaryOperation("−", {$1 - $0}))
+        learnOps(.unaryOperation("√", {sqrt($0)}))
+        learnOps(.unaryOperation("sin", {sin($0)}))
+        learnOps(.unaryOperation("cos", {cos($0)}))
         
-        learnConst(.Constant("π", 3.141592653589793))
+        learnConst(.constant("π", 3.141592653589793))
 
 //        formatter.locale = NSLocale.currentLocale()
 //        valueFormatter.numberStyle = .DecimalStyle
@@ -211,27 +224,27 @@ class CalculatorBrain {
     //*******************
 
     //pushes a number onto the the stack
-    func pushOperand(operand:Double?){
+    func pushOperand(_ operand:Double?){
         if let _ = operand{
-            operandStack.append(Op.Operand (operand!))
+            operandStack.append(Op.operand (operand!))
         }
 //        println("CalculatorBrain:pushOperand: pushed \(operand)")
 
     }
     
     //pushes a constant or variable onto the the stack
-    func pushOperand(operand: String) -> (Double?, String?){
+    func pushOperand(_ operand: String) -> (Double?, String?){
         if let constant = knownConstants[operand]{
             operandStack.append(constant)
         }
         else{
-            operandStack.append(Op.Variable(operand))
+            operandStack.append(Op.variable(operand))
         }
         return evaluate()
     }
     
     //pushes an operation onto the stack
-    func pushOperation(symbol: String){
+    func pushOperation(_ symbol: String){
         if let operation = knownOps[symbol]{
             operandStack.append(operation)
             print("CalculatorBrain:pushOperation: pushed \(symbol)")
@@ -248,18 +261,18 @@ class CalculatorBrain {
     
     //clears the program stack and all variable values
     func clear(){
-        operandStack.removeAll(keepCapacity: false)
-        variableValues.removeAll(keepCapacity: false)
+        operandStack.removeAll(keepingCapacity: false)
+        variableValues.removeAll(keepingCapacity: false)
     }
     
     func undo(){
         operandStack.removeLast()
     }
     
-    func getConstantValue (symbol: String) -> Double?{
+    func getConstantValue (_ symbol: String) -> Double?{
         if let op = knownConstants[symbol]{
             switch op{
-            case .Constant(_, let returnValue):
+            case .constant(_, let returnValue):
                 return returnValue
             
             default:
@@ -282,16 +295,16 @@ class CalculatorBrain {
     //internal functions
     //*******************
 
-    private func evaluate (ops:[Op]) ->(result: Double?, remainingOps:[Op], evalMessage: String?){
+    fileprivate func evaluate (_ ops:[Op]) ->(result: Double?, remainingOps:[Op], evalMessage: String?){
         if !ops.isEmpty{
             var remainingOps = ops
             let op = remainingOps.removeLast()
             print ("processing op: \(op)")
             switch op {
-            case .Operand(let operand):
+            case .operand(let operand):
                     print("this is an operand...")
                     return (operand, remainingOps, nil)
-            case .UnaryOperation(_, let operation):
+            case .unaryOperation(_, let operation):
                 print("this is an unary ops...")
                 let operandEvaluation = evaluate(remainingOps)
                 if operandEvaluation.result != nil{
@@ -305,7 +318,7 @@ class CalculatorBrain {
                 else {
                     return (nil, remainingOps, errorMessages.argMissing)
                 }
-            case .BinaryOperation(_, let operation):
+            case .binaryOperation(_, let operation):
                 print("this is a binary ops...")
                 let operandEvaluation1 = evaluate(remainingOps)
                 if let operand1 = operandEvaluation1.result{
@@ -326,7 +339,7 @@ class CalculatorBrain {
                     return (nil, remainingOps, errorMessages.argMissing)
                 }
 
-            case .Variable(let variable):
+            case .variable(let variable):
                 print("this is a variable...")
                 if let variableValue = variableValues[variable]{
                     return (variableValue, remainingOps, nil)
@@ -334,7 +347,7 @@ class CalculatorBrain {
                 else{
                     return (nil, remainingOps, nil)
                 }
-            case .Constant(_, let constValue):
+            case .constant(_, let constValue):
                 print("this is a    constant...")
                 return (constValue, remainingOps, nil)
                 
@@ -345,7 +358,7 @@ class CalculatorBrain {
     }
     
     //returns a textual expression of the stack content
-    private func describeStack(ops:[Op]) -> (result:String?, remainingOps:[Op], precedence:Int?){
+    fileprivate func describeStack(_ ops:[Op]) -> (result:String?, remainingOps:[Op], precedence:Int?){
 //        valueFormatter.locale = locale
         
         if !ops.isEmpty{
@@ -353,11 +366,11 @@ class CalculatorBrain {
             let op = remainingOps.removeLast()
             
             switch op{
-            case .Operand( let operand):
-                let operandString = formatter.stringFromNumber(operand)
+            case .operand( let operand):
+                let operandString = formatter.string(from: NSNumber(value:operand))
                 return (operandString, remainingOps, op.precedence)
             
-            case .UnaryOperation (let operation, _):
+            case .unaryOperation (let operation, _):
                 let operandEvaluation = describeStack(remainingOps)
                 if let operand = operandEvaluation.result {
                     return ("\(operation)(\(operand))", operandEvaluation.remainingOps, op.precedence)
@@ -366,7 +379,7 @@ class CalculatorBrain {
                     return ("\(operation)(?)", operandEvaluation.remainingOps, op.precedence)
                 }
                 
-            case .BinaryOperation(let operation, _):
+            case .binaryOperation(let operation, _):
                 previousPrecedence = currentPrecedence
                 currentPrecedence = op.precedence
 //                println("begin case:previous precedence: \(previousPrecedence), current precedence: \(currentPrecedence)")
@@ -397,10 +410,10 @@ class CalculatorBrain {
                     
                 }
 
-            case .Constant(let symbol, _):
+            case .constant(let symbol, _):
                 return (symbol, remainingOps, op.precedence)
                 
-            case .Variable(let symbol):
+            case .variable(let symbol):
                 return (symbol, remainingOps, op.precedence)
                 
             }

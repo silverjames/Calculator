@@ -21,14 +21,14 @@ class CalculatorViewController: UIViewController
     
     var userIsInTheMiddleOfTyping: Bool = false
     var brain = CalculatorBrain()
-    private var formatter = NSNumberFormatter()
-    private var locale = NSLocale.currentLocale()
-    private var defaults = NSUserDefaults.standardUserDefaults()
-    private var localeDecimalSeparator:String?
+    fileprivate var formatter = NumberFormatter()
+    fileprivate var locale = Locale.current
+    fileprivate var defaults = UserDefaults.standard
+    fileprivate var localeDecimalSeparator:String?
     
     var program: [String]{
-        get{return defaults.objectForKey(Constants.userDefaultsKey) as? [String] ?? []}
-        set{defaults.setObject(newValue, forKey: Constants.userDefaultsKey)}
+        get{return defaults.object(forKey: Constants.userDefaultsKey) as? [String] ?? []}
+        set{defaults.set(newValue, forKey: Constants.userDefaultsKey)}
     }
     struct Constants {
         static let graphViewSegue = "Show Graph"
@@ -40,13 +40,13 @@ class CalculatorViewController: UIViewController
     var displayValue: Double?{
         get {
             if let _ = display.text {
-                return formatter.numberFromString(display.text!)?.doubleValue
+                return formatter.number(from: display.text!)?.doubleValue
             }
                 return nil
         }
         set {
             if let tempValue = newValue{
-                display.text = "\(NSNumberFormatter.localizedStringFromNumber(tempValue, numberStyle: .DecimalStyle))"
+                display.text = "\(NumberFormatter.localizedString(from: NSNumber(value:tempValue), number: .decimal))"
             }
             else {
                 display.text = " "
@@ -75,7 +75,7 @@ class CalculatorViewController: UIViewController
         if userIsInTheMiddleOfTyping {userIsInTheMiddleOfTyping = false}
         
         if display.text != nil{
-            if let value = formatter.numberFromString(display.text!)?.doubleValue {
+            if let value = formatter.number(from: display.text!)?.doubleValue {
                 brain.variableValues[Constants.memoryButton] = value
 //                println("CVC: set mem to \(brain.variableValues[Constants.memoryButton])")
             }
@@ -83,7 +83,7 @@ class CalculatorViewController: UIViewController
     }
     
     
-    @IBAction func operate(sender: UIButton) {
+    @IBAction func operate(_ sender: UIButton) {
         let operand = sender.currentTitle!
         if userIsInTheMiddleOfTyping {
             stackOperand()
@@ -113,11 +113,11 @@ class CalculatorViewController: UIViewController
         displayValue = brain.getConstantValue("π")
     }
     
-    @IBAction func sendDigit(sender: UIButton){
+    @IBAction func sendDigit(_ sender: UIButton){
         messageLine.text = " "
         let digit = sender.currentTitle!
         if userIsInTheMiddleOfTyping {
-            if ((display.text?.rangeOfString(localeDecimalSeparator!) != nil) && digit != localeDecimalSeparator!) || display.text?.rangeOfString(localeDecimalSeparator!) == nil {
+            if ((display.text?.range(of: localeDecimalSeparator!) != nil) && digit != localeDecimalSeparator!) || display.text?.range(of: localeDecimalSeparator!) == nil {
                 display.text = display.text! + digit
             }
         }
@@ -134,7 +134,7 @@ class CalculatorViewController: UIViewController
         messageLine.text = " "
         displayValue = nil
         brain.clear()
-        defaults.removeObjectForKey(Constants.userDefaultsKey)
+        defaults.removeObject(forKey: Constants.userDefaultsKey)
     }
     
     @IBAction func enter() {
@@ -166,7 +166,7 @@ class CalculatorViewController: UIViewController
                     //button.backgroundColor = UIColor.clearColor()
                 button.layer.cornerRadius = 5
                 button.layer.borderWidth = 0.1
-                button.layer.borderColor = UIColor.grayColor().CGColor
+                button.layer.borderColor = UIColor.gray.cgColor
 //                button.layer.backgroundColor = UIColor.grayColor().CGColor
             }
         }
@@ -175,15 +175,15 @@ class CalculatorViewController: UIViewController
             if label is UILabel {
                 label.layer.cornerRadius = 5
                 label.layer.borderWidth = 0.2
-                label.layer.borderColor = UIColor.blueColor().CGColor
+                label.layer.borderColor = UIColor.blue.cgColor
             }
         }
         
-          brain.program = program
+          brain.program = (program as AnyObject) as! [String]
         
     }
     
-    override func viewDidDisappear(animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(false)
         program = brain.program as! [String]
     }
@@ -193,8 +193,8 @@ class CalculatorViewController: UIViewController
     //    **************************************
     //    preparing for segues
     //    **************************************
-    override func prepareForSegue(segue: UIStoryboardSegue , sender: AnyObject?) {
-        var destination = segue.destinationViewController as? UIViewController
+    override func prepare(for segue: UIStoryboardSegue , sender: Any?) {
+        var destination = segue.destination as? UIViewController
 
         if let navCon = destination as? UINavigationController{
             destination = navCon.visibleViewController
@@ -218,12 +218,12 @@ class CalculatorViewController: UIViewController
     //    private API
     //    **************************************
 
-    private func stackOperand(){
+    fileprivate func stackOperand(){
         userIsInTheMiddleOfTyping = false
         brain.pushOperand(displayValue)
     }
     
-    private func evaluateAndDisplayResult() {
+    fileprivate func evaluateAndDisplayResult() {
         let (tmpValue, errMsg) = brain.evaluate()
         if errMsg != nil {
             messageLine.text = errMsg

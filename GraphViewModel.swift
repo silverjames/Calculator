@@ -21,7 +21,7 @@ class GraphViewModel: AnyObject, graphViewdataSource  {
         var data = [Double: Double]()
         var stepper = lowerBound
         var error:String?
-        brain.program = program
+        brain.program = (program as AnyObject) as! [String]
         
         while stepper <= upperBound{
             brain.variableValues["M"] = stepper

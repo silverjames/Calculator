@@ -27,7 +27,7 @@ class GraphView: UIView {
     @IBInspectable
     var lineWidth: CGFloat = 3 { didSet {setNeedsDisplay()}}
     @IBInspectable
-    var color: UIColor = UIColor.blueColor() {didSet {setNeedsDisplay()}}
+    var color: UIColor = UIColor.blue {didSet {setNeedsDisplay()}}
 
     var graphOrigin:CGPoint? {didSet {setNeedsDisplay()}}
 
@@ -35,8 +35,8 @@ class GraphView: UIView {
     var geoSaver: saveGeometry?
     var programToGraph:String?
     
-    private var axis = AxesDrawer()
-    private var xyDataToGraph = [Double:Double]()
+    fileprivate var axis = AxesDrawer()
+    fileprivate var xyDataToGraph = [Double:Double]()
     
 
     //    **************************************
@@ -46,7 +46,7 @@ class GraphView: UIView {
         get{
             var keys = [Double]()
             for (x, _) in xyDataToGraph{keys.append(x)}
-            return keys.sort(<)
+            return keys.sorted(by: <)
         }
     }
     //    **************************************
@@ -57,10 +57,10 @@ class GraphView: UIView {
     //    drawing happens here
     //    **************************************
 
-    override func drawRect(rect: CGRect) {
+    override func draw(_ rect: CGRect) {
 
         if graphOrigin == nil{
-            graphOrigin = CGPointMake(bounds.midX, bounds.midY)
+            graphOrigin = CGPoint(x: bounds.midX, y: bounds.midY)
         }
         
 //      the coordinate system
@@ -84,10 +84,10 @@ class GraphView: UIView {
                         let y0 = (CGFloat(-y) * scale) + graphOrigin!.y
                         
                         if startPointSet {
-                            graph.addLineToPoint(CGPointMake(x0, y0))
+                            graph.addLine(to: CGPoint(x: x0, y: y0))
                         }
                         else {
-                            graph.moveToPoint(CGPointMake(x0 , y0))
+                            graph.move(to: CGPoint(x: x0 , y: y0))
                             startPointSet = true
                         }
                     }
@@ -105,19 +105,19 @@ class GraphView: UIView {
             let verticalOffset: CGFloat = 70
             let horizontalOffset: CGFloat = 0
             let attributes = [
-                NSFontAttributeName : UIFont.preferredFontForTextStyle(UIFontTextStyleFootnote),
+                NSFontAttributeName : UIFont.preferredFont(forTextStyle: UIFontTextStyle.footnote),
                 NSForegroundColorAttributeName : color
-            ]
-            let textRect = CGRect(origin: CGPointMake(self.bounds.minX + horizontalOffset, self.bounds.minY + verticalOffset), size: programDesc.sizeWithAttributes(attributes))
-            programDesc.drawInRect(textRect, withAttributes: attributes)
+            ] as [String : Any]
+            let textRect = CGRect(origin: CGPoint(x: self.bounds.minX + horizontalOffset, y: self.bounds.minY + verticalOffset), size: programDesc.size(attributes: attributes))
+            programDesc.draw(in: textRect, withAttributes: attributes)
            
         }
         
         // save the geometry changes in user defaults
         var geometry: [CGFloat] = []
-        geometry.insert(self.scale, atIndex: 0)
-        geometry.insert(self.graphOrigin!.x, atIndex: 1)
-        geometry.insert(self.graphOrigin!.y, atIndex: 2)
+        geometry.insert(self.scale, at: 0)
+        geometry.insert(self.graphOrigin!.x, at: 1)
+        geometry.insert(self.graphOrigin!.y, at: 2)
         geoSaver?.storeGeometrydata(geometry)
         
     }
@@ -126,7 +126,7 @@ class GraphView: UIView {
         var statistics: [String:Double] = [:]
         var values = [Double]()
         for (_, y) in xyDataToGraph{values.append(y)}
-        let sortedValues = values.sort(<)
+        let sortedValues = values.sorted(by: <)
 
         statistics["min(x) = "] = round(sortedKeys.first!*1000)/1000
         statistics["max(x) = "] = round(sortedKeys.last!*1000)/1000
@@ -140,9 +140,9 @@ class GraphView: UIView {
 //    gesture handlers
 //    **************************************
     
-    func scale (gesture: UIPinchGestureRecognizer){
+    func scale (_ gesture: UIPinchGestureRecognizer){
         switch gesture.state{
-        case .Changed:
+        case .changed:
             scale *= gesture.scale
             gesture.scale = 1
         default:
@@ -150,17 +150,17 @@ class GraphView: UIView {
         }
     }
     
-    func handleTap (gesture: UITapGestureRecognizer){
-        if gesture.state == .Ended  {
-            self.graphOrigin = gesture.locationInView(self)
+    func handleTap (_ gesture: UITapGestureRecognizer){
+        if gesture.state == .ended  {
+            self.graphOrigin = gesture.location(in: self)
         }
     }
     
-    func handlePan (gesture: UIPanGestureRecognizer){
-        let translation = gesture.translationInView(self)
+    func handlePan (_ gesture: UIPanGestureRecognizer){
+        let translation = gesture.translation(in: self)
         graphOrigin!.x = graphOrigin!.x + translation.x
         graphOrigin!.y = graphOrigin!.y + translation.y
-        gesture.setTranslation(CGPointZero, inView: self)
+        gesture.setTranslation(CGPoint.zero, in: self)
     }//end func
 
 
