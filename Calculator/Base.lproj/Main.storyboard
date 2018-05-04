@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="F1G-XF-4P1">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="F1G-XF-4P1">
     <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Alignment constraints to the first baseline" minToolsVersion="6.0"/>
-        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -1392,18 +1391,6 @@
                                 <exclude reference="iiQ-Km-MtI"/>
                                 <exclude reference="vR6-Lk-ska"/>
                                 <exclude reference="wOT-Ux-f7c"/>
-                                <exclude reference="I6k-Gc-9Of"/>
-                                <exclude reference="Ic6-SL-jQR"/>
-                                <exclude reference="MPJ-Fu-HGK"/>
-                                <exclude reference="N4s-YV-aH5"/>
-                                <exclude reference="Obl-wP-oY4"/>
-                                <exclude reference="PDU-uL-qm6"/>
-                                <exclude reference="QIj-rv-VK4"/>
-                                <exclude reference="gW8-2t-bRe"/>
-                                <exclude reference="udZ-LK-Y4H"/>
-                                <exclude reference="vBN-d8-mGT"/>
-                                <exclude reference="z9w-xl-kB6"/>
-                                <exclude reference="zdz-Vr-pXf"/>
                                 <exclude reference="67e-3l-AjX"/>
                                 <exclude reference="CpT-Xe-lJK"/>
                                 <exclude reference="EWz-SC-j5N"/>
@@ -1426,6 +1413,18 @@
                                 <exclude reference="KIa-ab-iTF"/>
                                 <exclude reference="SB4-4H-LKT"/>
                                 <exclude reference="zS6-Ar-XuD"/>
+                                <exclude reference="I6k-Gc-9Of"/>
+                                <exclude reference="Ic6-SL-jQR"/>
+                                <exclude reference="MPJ-Fu-HGK"/>
+                                <exclude reference="N4s-YV-aH5"/>
+                                <exclude reference="Obl-wP-oY4"/>
+                                <exclude reference="PDU-uL-qm6"/>
+                                <exclude reference="QIj-rv-VK4"/>
+                                <exclude reference="gW8-2t-bRe"/>
+                                <exclude reference="udZ-LK-Y4H"/>
+                                <exclude reference="vBN-d8-mGT"/>
+                                <exclude reference="z9w-xl-kB6"/>
+                                <exclude reference="zdz-Vr-pXf"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=compact">
@@ -1450,9 +1449,9 @@
                                 <include reference="D5e-zg-Sdm"/>
                                 <include reference="Wcd-uB-Jq8"/>
                                 <include reference="eFn-e8-vFL"/>
-                                <include reference="gW8-2t-bRe"/>
                                 <include reference="bjF-60-cDF"/>
                                 <include reference="ssJ-I2-pIN"/>
+                                <include reference="gW8-2t-bRe"/>
                             </mask>
                         </variation>
                         <variation key="widthClass=compact">
@@ -1660,11 +1659,11 @@
                         <viewControllerLayoutGuide type="bottom" id="5Lk-dX-UUe"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleAspectFit" id="vbo-dj-6eI">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GgQ-sq-asG">
-                                <rect key="frame" x="20" y="0.0" width="560" height="600"/>
+                                <rect key="frame" x="20" y="0.0" width="374" height="736"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
@@ -1692,7 +1691,7 @@
             <objects>
                 <navigationController id="tya-YZ-dLO" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Kvd-Wo-1SE">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -1722,7 +1721,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="gkX-7j-rbV" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Lmt-El-4VC">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>

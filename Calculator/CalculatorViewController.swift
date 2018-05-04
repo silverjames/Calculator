@@ -185,7 +185,7 @@ class CalculatorViewController: UIViewController
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(false)
-        program = brain.program as! [String]
+        program = brain.program
     }
     
     
@@ -194,10 +194,10 @@ class CalculatorViewController: UIViewController
     //    preparing for segues
     //    **************************************
     override func prepare(for segue: UIStoryboardSegue , sender: Any?) {
-        var destination = segue.destination as? UIViewController
+        var destination = segue.destination
 
         if let navCon = destination as? UINavigationController{
-            destination = navCon.visibleViewController
+            destination = navCon.visibleViewController!
         }
         
         if let gvc = destination as? GraphViewController{
@@ -205,7 +205,7 @@ class CalculatorViewController: UIViewController
                 switch identifier{
                 case Constants.graphViewSegue :
                     gvc.programToGraph = brain.getCurrentProgram() ?? ""
-                    gvc.programToLoad = brain.program as! [String]
+                    gvc.programToLoad = brain.program 
                 default:
                     break
                 }

@@ -38,7 +38,7 @@ class GraphViewController: UIViewController, graphViewdataSource, saveGeometry, 
             print("GVC: setting outlet")
             graphView.dataSource = self
             graphView.geoSaver = self
-            graphView.addGestureRecognizer(UIPinchGestureRecognizer(target: graphView, action: "scale:"))
+            graphView.addGestureRecognizer(UIPinchGestureRecognizer(target: graphView, action: Selector(("scale:"))))
             graphView.addGestureRecognizer(UIPanGestureRecognizer(target: graphView, action: "handlePan:"))
             graphView.addGestureRecognizer(UITapGestureRecognizer(target: graphView, action: "handleTap:"))
             graphView.contentMode = UIViewContentMode.redraw

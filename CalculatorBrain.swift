@@ -255,7 +255,7 @@ class CalculatorBrain {
     func evaluate() -> (Double?, String?) {
         let (result, remainder, errMsg) = evaluate(operandStack)
 //        let msg = errMsg ?? ""
-        print("CB:\(operandStack) = \(result) with \(remainder) and message: \(errMsg) left over")
+        print("CB:\(operandStack) = \(String(describing: result)) with \(remainder) and message: \(errMsg) left over")
         return (result, errMsg)
     }
     

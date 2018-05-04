@@ -105,10 +105,10 @@ class GraphView: UIView {
             let verticalOffset: CGFloat = 70
             let horizontalOffset: CGFloat = 0
             let attributes = [
-                NSFontAttributeName : UIFont.preferredFont(forTextStyle: UIFontTextStyle.footnote),
-                NSForegroundColorAttributeName : color
-            ] as [String : Any]
-            let textRect = CGRect(origin: CGPoint(x: self.bounds.minX + horizontalOffset, y: self.bounds.minY + verticalOffset), size: programDesc.size(attributes: attributes))
+                NSAttributedStringKey.font.rawValue : UIFont.preferredFont(forTextStyle: UIFontTextStyle.footnote),
+                NSAttributedStringKey.foregroundColor : color
+            ] as! [String : Any]
+            let textRect = CGRect(origin: CGPoint(x: self.bounds.minX + horizontalOffset, y: self.bounds.minY + verticalOffset), size: programDesc.size(withAttributes: attributes))
             programDesc.draw(in: textRect, withAttributes: attributes)
            
         }
