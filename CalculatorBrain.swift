@@ -180,9 +180,9 @@ class CalculatorBrain {
             //            println("result is \(resultString)")
             while !remainder.isEmpty {
                 var (result, remainder2, _) = describeStack(remainder)
-                if result != nil {
-                    result?.insert(";", at: (result?.endIndex)!)
-                    resultString.insert(contentsOf: result!.characters , at: resultString.startIndex)
+                if var tmpResult = result {
+                    tmpResult.insert(";", at: (result?.endIndex)!)
+                    resultString.insert(contentsOf: tmpResult, at: resultString.startIndex)
                     remainder = remainder2
                 }
             }

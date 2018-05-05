@@ -9,7 +9,7 @@
 import Foundation
 
 
-class GraphViewModel: AnyObject, graphViewdataSource  {
+class GraphViewModel: graphViewdataSource  {
   
     var lowerBound: Double = 0.0
     var upperBound: Double = 0.0

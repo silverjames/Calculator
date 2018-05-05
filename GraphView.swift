@@ -107,8 +107,9 @@ class GraphView: UIView {
             let attributes = [
                 NSAttributedStringKey.font.rawValue : UIFont.preferredFont(forTextStyle: UIFontTextStyle.footnote),
                 NSAttributedStringKey.foregroundColor : color
-            ] as! [String : Any]
-            let textRect = CGRect(origin: CGPoint(x: self.bounds.minX + horizontalOffset, y: self.bounds.minY + verticalOffset), size: programDesc.size(withAttributes: attributes))
+            ] as! [NSAttributedStringKey: Any]
+            let tmpAttributedString = NSMutableAttributedString(string: programDesc, attributes: attributes)
+            let textRect = CGRect(origin: CGPoint(x: self.bounds.minX + horizontalOffset, y: self.bounds.minY + verticalOffset), size: tmpAttributedString.size())
             programDesc.draw(in: textRect, withAttributes: attributes)
            
         }
