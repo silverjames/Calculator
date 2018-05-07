@@ -39,8 +39,8 @@ class GraphViewController: UIViewController, graphViewdataSource, saveGeometry, 
             graphView.dataSource = self
             graphView.geoSaver = self
             graphView.addGestureRecognizer(UIPinchGestureRecognizer(target: graphView, action: Selector(("scale:"))))
-            graphView.addGestureRecognizer(UIPanGestureRecognizer(target: graphView, action: "handlePan:"))
-            graphView.addGestureRecognizer(UITapGestureRecognizer(target: graphView, action: "handleTap:"))
+            graphView.addGestureRecognizer(UIPanGestureRecognizer(target: graphView, action: Selector(("handlePan:"))))
+            graphView.addGestureRecognizer(UITapGestureRecognizer(target: graphView, action: Selector(("handleTap:"))))
             graphView.contentMode = UIViewContentMode.redraw
             
             updateUI()

@@ -125,7 +125,7 @@ class CalculatorViewController: UIViewController
             userIsInTheMiddleOfTyping = true
             display.text = digit
         }
-        print("display text: \(display.text)")
+        print("display text: \(String(describing: display.text))")
     }
     
     

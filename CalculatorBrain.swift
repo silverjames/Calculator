@@ -179,7 +179,7 @@ class CalculatorBrain {
             var resultString = result ?? ""
             //            println("result is \(resultString)")
             while !remainder.isEmpty {
-                var (result, remainder2, _) = describeStack(remainder)
+                let (result, remainder2, _) = describeStack(remainder)
                 if var tmpResult = result {
                     tmpResult.insert(";", at: (result?.endIndex)!)
                     resultString.insert(contentsOf: tmpResult, at: resultString.startIndex)
