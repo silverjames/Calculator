@@ -105,9 +105,9 @@ class GraphView: UIView {
             let verticalOffset: CGFloat = 70
             let horizontalOffset: CGFloat = 0
             let attributes = [
-                NSAttributedStringKey.font.rawValue : UIFont.preferredFont(forTextStyle: UIFontTextStyle.footnote),
+                NSAttributedStringKey.font : UIFont.preferredFont(forTextStyle: UIFontTextStyle.footnote),
                 NSAttributedStringKey.foregroundColor : color
-            ] as! [NSAttributedStringKey: Any]
+            ] as [NSAttributedStringKey: Any]
             let tmpAttributedString = NSMutableAttributedString(string: programDesc, attributes: attributes)
             let textRect = CGRect(origin: CGPoint(x: self.bounds.minX + horizontalOffset, y: self.bounds.minY + verticalOffset), size: tmpAttributedString.size())
             programDesc.draw(in: textRect, withAttributes: attributes)
@@ -151,13 +151,13 @@ class GraphView: UIView {
         }
     }
     
-    func handleTap (_ gesture: UITapGestureRecognizer){
+    @objc func handleTap (_ gesture: UITapGestureRecognizer){
         if gesture.state == .ended  {
             self.graphOrigin = gesture.location(in: self)
         }
     }
     
-    func handlePan (_ gesture: UIPanGestureRecognizer){
+    @objc func handlePan (_ gesture: UIPanGestureRecognizer){
         let translation = gesture.translation(in: self)
         graphOrigin!.x = graphOrigin!.x + translation.x
         graphOrigin!.y = graphOrigin!.y + translation.y
