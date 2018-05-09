@@ -95,9 +95,10 @@ class CalculatorViewController: UIViewController
     @IBAction func backspace() {
         if userIsInTheMiddleOfTyping && (display.text != nil){//backspace
             
-            let lengthOfDisplayText = (display.text!).characters.count
+//            let lengthOfDisplayText = (display.text!).characters.count
+            let lengthOfDisplayText = (display.text!).count
             if lengthOfDisplayText > 1{
-                display.text = String((display.text!).characters.dropLast ())
+                display.text = String((display.text!).dropLast ())
             }
             else {
                 displayValue = nil
