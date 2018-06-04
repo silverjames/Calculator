@@ -109,7 +109,7 @@ class CalculatorViewController: UIViewController
     }
     
     @IBAction func sendPi() {
-        brain.pushOperand("π")
+        _ = brain.pushOperand("π")
         displayValue = brain.getConstantValue("π")
     }
     
