@@ -35,7 +35,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		6FEE996C20AC7F1800D799DD /* AppIcon.appiconset */ = {isa = PBXFileReference; lastKnownFileType = folder; path = AppIcon.appiconset; sourceTree = "<group>"; };
 		6FEE996D20AC7F5F00D799DD /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		6FEE997E20AD4A9B00D799DD /* AxesDrawer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AxesDrawer.swift; sourceTree = "<group>"; };
 		721C7FEC1B7A93940046B1EE /* StatisticsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StatisticsViewController.swift; path = ../StatisticsViewController.swift; sourceTree = "<group>"; };
@@ -77,13 +76,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		6FEE997D20AD499000D799DD /* New Group */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "New Group";
-			sourceTree = "<group>";
-		};
 		CB02B8711ACE2369004B3DC5 = {
 			isa = PBXGroup;
 			children = (
@@ -121,9 +113,7 @@
 		CB02B87D1ACE2369004B3DC5 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				6FEE997D20AD499000D799DD /* New Group */,
 				6FEE996D20AC7F5F00D799DD /* Images.xcassets */,
-				6FEE996C20AC7F1800D799DD /* AppIcon.appiconset */,
 				726736751BF389140075E144 /* InfoPlist.strings */,
 				723C76BA1B16DDC6004040BB /* Media.xcassets */,
 				CB02B87F1ACE2369004B3DC5 /* AppDelegate.swift */,
@@ -435,7 +425,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = Calculator/Info.plist;
@@ -444,7 +433,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.bfk-engineering.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -454,7 +443,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = Calculator/Info.plist;
@@ -463,7 +451,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.bfk-engineering.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

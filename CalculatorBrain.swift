@@ -140,7 +140,7 @@ class CalculatorBrain {
     fileprivate var currentPrecedence:Int?
     
     //*******************
-    //computed properties
+    //MARK: computed properties
     //*******************
     var program:[String]{
         get {
@@ -150,10 +150,10 @@ class CalculatorBrain {
 //            valueFormatter.locale = NSLocale.currentLocale()
 //            valueFormatter.numberStyle = .DecimalStyle
             
-            if let newProgram = newValue as? [String] {//I am getting an array of strings, good
+//            if let newProgram = newValue as? [String] {//I am getting an array of strings, good
                 var newOps = [Op]()
                 formatter.locale = localeEN
-                for item in newProgram{
+                for item in newValue{
                     if let op = knownOps[item]{
                         newOps.append(op)
                     }
@@ -169,7 +169,7 @@ class CalculatorBrain {
                 }//iterate through newValue
 //                println("CB:program setter - newOps: \(newOps)")
                 operandStack = newOps
-            }//valid input
+//            }//valid input
         }//set
     }
     
@@ -192,7 +192,7 @@ class CalculatorBrain {
     
     
     //*******************
-    //initializer
+    //MARK: initializer
     //*******************
     init() {
         
@@ -218,9 +218,9 @@ class CalculatorBrain {
         
         
     }
-    //MARK: API
+
     //*******************
-    //API
+    //MARK: API
     //*******************
 
     //pushes a number onto the the stack
